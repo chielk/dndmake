@@ -3,43 +3,6 @@
 # and eye colour, and a personality based on
 # http://en.wikipedia.org/wiki/Big_Five_personality_traits
 # (c) Chiel Kooijman 2014
-import random
-
-
-ALIGNMENT_LONG = {"LG": "Lawful Good",
-                  "NG": "Neutral Good",
-                  "CG": "Chaotic Good",
-                  "LN": "Lawful Neutral",
-                  "NN": "True Neutral",
-                  "CN": "Chaotic Neutral",
-                  "LE": "Lawful Evil",
-                  "NE": "Neutral Evil",
-                  "CE": "Chaotic Evil"}
-
-genders = ["male", "female"]
-
-c_hair = ["black", "brown", "blond", "red"]
-c_hair_unusual = ["green", "blue", "white"]
-
-c_eyes = ["blue", "brown", "green"]
-c_eyes_unusual = ["red", "violet"]
-
-dimensions = ["open",  # chaos <-> law
-              "conscientious",  # law <-> chaos
-              "extravert",
-              "agreeable",  # good <-> evil
-              "neurotic"]  # evil <-> good, chaos <-> law
-
-values = {"open": ("inventive and curious", "curious", "cautious",
-                   "cautious and conservative"),
-          "conscientious": ("efficient and organized", "organized",
-                            "easy-going", "careless"),
-          "extravert": ("outgoing and energetic", "outgoing", "reserved",
-                        "solitary and reserved"),
-          "agreeable": ("friendly and compassionate", "friendly",
-                        "analytical", "analytical and detached"),
-          "neurotic": ("prone to anger and fear", "nervous", "calm",
-                       "calm and confident")}
 
 """
 Openness to experience: (inventive/curious vs. consistent/cautious).
@@ -71,209 +34,220 @@ impulse control and is sometimes referred to by its low pole, "emotional
 stability".
 """
 
-
-class Unit:
-    def __init__(self, v=0):
-        self.__val = v
-
-    def __mul__(self, other):
-        if type(other) in (int, float):
-            return type(self)(v=self.__val * other)
-        elif type(other) == type(self):
-            return type(self)(v=self.__val * other.val())
-        else:
-            s = "Can not mutiply types: {} and {}"
-            raise Exception(s.format(str(type(self)), str(type(other))))
-
-    def __imul__(self, other):
-        if type(other) in (int, float):
-            self.__val *= other
-        elif type(other) == type(self):
-            self.__val *= other.val()
-        else:
-            s = "Can not mutiply types: {} and {}"
-            raise Exception(s.format(str(type(self)), str(type(other))))
-
-    def __add__(self, other):
-        if type(other) == type(self):
-            return type(self)(v=self.__val + other.val())
-        else:
-            s = "Can not add types: {} and {}"
-            raise Exception(s.format(str(type(self)), str(type(other))))
-
-    def __iadd__(self, other):
-        if type(other) == type(self):
-            self.__val += other.val()
-        else:
-            s = "Can not add types: {} and {}"
-            raise Exception(s.format(str(type(self)), str(type(other))))
-
-    def val(self):
-        return self.__val
+import random
+import argparse
+import sys
+from simpleunit import Unit, Length, Weight, Inch
 
 
-class Length(Unit):
-    INCH = 0.0254
-    CM = 100
-    FT = 0.3048
+ALIGNMENT_LONG = {"LG": "Lawful Good",
+                  "NG": "Neutral Good",
+                  "CG": "Chaotic Good",
+                  "LN": "Lawful Neutral",
+                  "NN": "True Neutral",
+                  "CN": "Chaotic Neutral",
+                  "LE": "Lawful Evil",
+                  "NE": "Neutral Evil",
+                  "CE": "Chaotic Evil"}
+ALGS = ALIGNMENT_LONG.keys()
 
-    def __init__(self, cm=0, m=0, ft=0, inch=0, v=0):
-        val = inch * self.INCH
-        val += ft * self.FT
-        val += m
-        val += v
-        val += cm * self.CM
-        Unit.__init__(self, v=val)
+LAWFULNESS_VARIANCE = range(-1, 1)
+GOODNESS_VARIANCE = range(-2, 2)
 
-    @staticmethod
-    def Inch():
-        return Length(inch=1)
+ALIGN = [2, 1, -1, -2]  # Character trait index to alignment score
 
-    @staticmethod
-    def Ioot():
-        return Length(ft=1)
+GENDERS = ["male", "female"]
 
-    @staticmethod
-    def Meter():
-        return Length(m=1)
+HAIR = ["black", "brown", "blond", "ginger"]
+HAIR_UNUSUAL = ["green", "blue", "white", "red"]
 
-    @staticmethod
-    def Cm():
-        return Length(cm=1)
+EYES = ["blue", "brown", "green"]
+EYES_UNUSUAL = ["red", "violet"]
 
-    def imperial(self):
-        return (str(int(self.val() / self.FT)) + "'" +
-                str(int(self.val() % self.FT / self.INCH)) + "\"")
+DIMENSIONS = ["open",  # chaos <-> law
+              "conscientious",  # law <-> chaos
+              "extravert",
+              "agreeable",  # good <-> evil
+              "neurotic"]  # evil <-> good, chaos <-> law
 
-    def metric(self):
-        s = str(int(self.val()))
-        cm = int(self.val() % 1 * self.CM)
-        if not cm == 0:
-            s += ".%02d" % int(self.val() % 1 * self.CM)
-        s += "m"
-        return s
-
-    def __str__(self):
-        return self.metric()
-
-    def cm(self):
-        return str(int(self.val() * self.CM)) + "cm"
+VALUES = {"open": ("inventive and curious", "curious", "cautious",
+                   "cautious and conservative"),
+          "conscientious": ("efficient and organized", "organized",
+                            "a bit disorganized", "disorganized"),
+          "extravert": ("outgoing and energetic", "outgoing", "reserved",
+                        "solitary and reserved"),
+          "agreeable": ("friendly and compassionate", "friendly",
+                        "somewhat detached", "analytical and detached"),
+          "neurotic": ("quickly angered", "somewhat nervous", "calm",
+                       "calm and confident")}
 
 
-class Weight(Unit):
-    LB = 0.453592
-
-    def __init__(self, kg=0, lbs=0, v=0):
-        val = kg
-        val += lbs * self.LB
-        val += v
-        Unit.__init__(self, v=val)
-
-    @staticmethod
-    def Lb():
-        return Weight(lbs=1)
-
-    @staticmethod
-    def Kg():
-        return Weight(kg=1)
-
-    def imperial(self):
-        return str(int(self.val() / self.LB)) + " lbs"
-
-    def metric(self):
-        return str(round(self.val())) + "kg"
-
-    def __str__(self):
-        return self.metric()
-
-
+# Helper functions
 def roll(n):
+    """Roll an n-sided die."""
     return random.randint(1, n)
 
-gender = random.choice(genders)
+
+def score_to_alignment(law, good):
+    """Convert a lawfulness and goodness score to an alignment."""
+    if law > 2:
+        lawfulness = "L"
+    elif law < -2:
+        lawfulness = "C"
+    else:
+        lawfulness = "N"
+
+    if good > 1:
+        goodness = "G"
+    elif good < -1:
+        goodness = "E"
+    else:
+        goodness = "N"
+
+    return lawfulness + goodness
+
+
+def make_personality(wanted_alignment=None):
+    """Make a random personality based on the Big Five Personality Traits.
+    :param wanted_alignment: If a wanted alignment is given, it will make a
+                             personality that is consistent with that alignment
+    :returns: A tuple containing a personality and an alignment
+    """
+    while True:
+        law = 0
+        good = 0
+        personality = []
+        for dimension in DIMENSIONS:
+            rand = random.randint(0, 3)
+            if dimension == "open":
+                law += ALIGN[rand]
+            elif dimension == "conscientious":
+                law -= ALIGN[rand]
+            elif dimension == "agreeable":
+                good += ALIGN[rand]
+            elif dimension == "neurotic":
+                good -= ALIGN[rand]
+                law += ALIGN[rand]
+            personality.append(VALUES[dimension][rand])
+
+        if not wanted_alignment:
+            # Add random element to alignment
+            law += random.choice(LAWFULNESS_VARIANCE)
+            good += random.choice(GOODNESS_VARIANCE)
+
+            alignment = score_to_alignment(law, good)
+            return alignment, personality
+        else:
+            for l in LAWFULNESS_VARIANCE:
+                for g in GOODNESS_VARIANCE:
+                    tmp_law = law + l
+                    tmp_good = good + g
+                    alignment = score_to_alignment(tmp_law, tmp_good)
+                    if alignment == wanted_alignment:
+                        return alignment, personality
+
+
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description="Generate a D&D human.")
+parser.add_argument("-m", "--male", action="store_true",
+                    help="Make a male human")
+parser.add_argument("-f", "--female", action="store_true",
+                    help="Make a female human")
+parser.add_argument("-t", "--tall", action="store_true",
+                    help="Make a tall human")
+parser.add_argument("-s", "--short", action="store_true",
+                    help="Make a short human")
+parser.add_argument("-b", "--heavy", action="store_true",
+                    help="Make a heavy human")
+parser.add_argument("-l", "--light", action="store_true",
+                    help="Make a light human")
+parser.add_argument("alignment", nargs="?", default=None,
+                    help="Lawfulness and goodness: [LNC][GNE]")
+parser.add_argument("-n", "--name", help="Character name")
+args = parser.parse_args()
+
+if args.alignment and args.alignment not in ALGS:
+    sys.stderr.write("Illegal alignment: {}\n".format(args.alignment))
+    sys.stderr.write("Options are: {}.\n".format(", ".join(ALGS)))
+    sys.exit(1)
+# Personality and alignment
+alignment, personality = make_personality(wanted_alignment=args.alignment)
+
+# Gender
+if args.male and args.female:
+    sys.stderr.write("Can not make a human that is both male and female.\n")
+    sys.exit(1)
+elif args.male:
+    gender = "male"
+elif args.female:
+    gender = "female"
+else:
+    gender = random.choice(GENDERS)
+
 pronoun = "he" if gender == "male" else "she"
 
-"""
-Gender  Base Height Height Modifier Base Weight Weight Modifier
-Male    4’ 10”      +2d10           120 lb.     x (2d4) lb.
-Female  4’ 5”       +2d10           85 lb.      x (2d4) lb.
-"""
+# Height and weight
+if args.tall and args.short:
+    sys.stderr.write("Can not make a human that is both tall and short.\n")
+    sys.exit(1)
+elif args.tall:
+    size_h = 11 + roll(5) + roll(4)
+elif args.short:
+    size_h = roll(6) + roll(6)
+else:
+    size_h = roll(10) + roll(10)
 
-size = roll(10) + roll(10)
+if args.heavy and args.light:
+    sys.stderr.write("Can not make a human that is both tall and short.\n")
+    sys.exit(1)
+elif args.heavy:
+    size_w = 3 + roll(3) + roll(2)
+elif args.light:
+    size_w = roll(2) + roll(3)
+else:
+    size_w = roll(4) + roll(4)
+
+# Gender  Base Height Height Modifier Base Weight Weight Modifier
+# Male    4' 10"      +2d10           120 lb.     x (2d4) lb.
+# Female  4' 5"       +2d10           85 lb.      x (2d4) lb.
+
 
 if gender == "male":
-    height = Length(ft=4, inch=10) + Length.Inch() * size
-    weight = Weight(lbs=120) + Weight(lbs=(roll(4) + roll(4))) * size
+    height = Length(ft=4, inch=10) + Inch() * size_h
+    weight = Weight(lbs=120) + Weight(lbs=size_w) * size_h
 else:
-    height = Length(ft=4, inch=5) + Length.Inch() * size
-    weight = Weight(lbs=85) + Weight(lbs=(roll(4) + roll(4))) * size
+    height = Length(ft=4, inch=5) + Inch() * size_h
+    weight = Weight(lbs=85) + Weight(lbs=size_w) * size_h
+
+# Hair and eye colours
+if random.random() > .9:
+    hair = random.choice(HAIR_UNUSUAL)
+else:
+    hair = random.choice(HAIR)
 
 if random.random() > .9:
-    hair = random.choice(c_hair_unusual)
+    eyes = random.choice(EYES_UNUSUAL)
 else:
-    hair = random.choice(c_hair)
+    eyes = random.choice(EYES)
 
-if random.random() > .9:
-    eyes = random.choice(c_eyes_unusual)
+# Output
+if args.name:
+    name = args.name
 else:
-    eyes = random.choice(c_eyes)
+    name = "Your character"
 
-rest = []
-
-law = 0
-good = 0
-
-def align(num):
-    if num == 0:
-        return 2
-    elif num == 1:
-        return 1
-    elif num == 2:
-        return -1
-    elif num == 3:
-        return -2
-
-for dimension in dimensions:
-    rand = random.randint(0, 3)
-    if dimension == "open":
-        law += align(rand)
-    elif dimension == "conscientious":
-        law -= align(rand)
-    elif dimension == "agreeable":
-        good += align(rand)
-    elif dimension == "neurotic":
-        good -= align(rand)
-        law += align(rand)
-    rest.append(values[dimension][rand])
-
-law += random.choice([1, 0, -1])
-good += random.choice([2, 1, 0, -1, -2])
-
-if law > 2:
-    lawfulness = "L"
-elif law < -2:
-    lawfulness = "C"
-else:
-    lawfulness = "N"
-
-if good > 1:
-    goodness = "G"
-elif good < -1:
-    goodness = "E"
-else:
-    goodness = "N"
-
-alignment = lawfulness + goodness
-
-s = "Your character is a {} ({}) {}, {} ({}) tall and weighs {} ({}). {} has "
-s = s.format(ALIGNMENT_LONG[alignment],
+s = "{} is a {} ({}) {}, {} ({}) tall and weighs {} ({}). {} has "\
+    "{} hair and {} eyes.\n{} is "
+s = s.format(name,
+             ALIGNMENT_LONG[alignment],
              alignment,
              gender, height.metric(),
              height.imperial(),
              weight.metric(),
              weight.imperial(),
+             pronoun.capitalize(),
+             hair,
+             eyes,
              pronoun.capitalize())
-s += "{} hair and {} eyes.\n{} is ".format(hair, eyes, pronoun.capitalize())
-print(s, end="")
-print(", ".join(rest[:-1]) + ", and " + rest[-1] + ".")
-s = "Your character's alignment is {}{}."
+s += ", ".join(personality[:-1]) + ", and " + personality[-1] + "."
+print(s)
