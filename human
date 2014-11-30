@@ -1,0 +1,279 @@
+#!/usr/bin/env python3
+# human - generate a random human with height, weight according to D&D, hair
+# and eye colour, and a personality based on
+# http://en.wikipedia.org/wiki/Big_Five_personality_traits
+# (c) Chiel Kooijman 2014
+import random
+
+
+ALIGNMENT_LONG = {"LG": "Lawful Good",
+                  "NG": "Neutral Good",
+                  "CG": "Chaotic Good",
+                  "LN": "Lawful Neutral",
+                  "NN": "True Neutral",
+                  "CN": "Chaotic Neutral",
+                  "LE": "Lawful Evil",
+                  "NE": "Neutral Evil",
+                  "CE": "Chaotic Evil"}
+
+genders = ["male", "female"]
+
+c_hair = ["black", "brown", "blond", "red"]
+c_hair_unusual = ["green", "blue", "white"]
+
+c_eyes = ["blue", "brown", "green"]
+c_eyes_unusual = ["red", "violet"]
+
+dimensions = ["open",  # chaos <-> law
+              "conscientious",  # law <-> chaos
+              "extravert",
+              "agreeable",  # good <-> evil
+              "neurotic"]  # evil <-> good, chaos <-> law
+
+values = {"open": ("inventive and curious", "curious", "cautious",
+                   "cautious and conservative"),
+          "conscientious": ("efficient and organized", "organized",
+                            "easy-going", "careless"),
+          "extravert": ("outgoing and energetic", "outgoing", "reserved",
+                        "solitary and reserved"),
+          "agreeable": ("friendly and compassionate", "friendly",
+                        "analytical", "analytical and detached"),
+          "neurotic": ("prone to anger and fear", "nervous", "calm",
+                       "calm and confident")}
+
+"""
+Openness to experience: (inventive/curious vs. consistent/cautious).
+Appreciation for art, emotion, adventure, unusual ideas, curiosity, and variety
+of experience. Openness reflects the degree of intellectual curiosity,
+creativity and a preference for novelty and variety a person has. It is also
+described as the extent to which a person is imaginative or independent, and
+depicts a personal preference for a variety of activities over a strict
+routine. Some disagreement remains about how to interpret the openness factor,
+which is sometimes called "intellect" rather than openness to experience.
+
+Conscientiousness: (efficient/organized vs. easy-going/careless). A tendency to
+be organized and dependable, show self-discipline, act dutifully, aim for
+achievement, and prefer planned rather than spontaneous behavior.
+
+Extraversion: (outgoing/energetic vs. solitary/reserved). Energy, positive
+emotions, surgency, assertiveness, sociability and the tendency to seek
+stimulation in the company of others, and talkativeness.
+
+Agreeableness: (friendly/compassionate vs. analytical/detached). A tendency to
+be compassionate and cooperative rather than suspicious and antagonistic
+towards others. It is also a measure of one's trusting and helpful nature, and
+whether a person is generally well tempered or not.
+
+Neuroticism: (sensitive/nervous vs. secure/confident). The tendency to
+experience unpleasant emotions easily, such as anger, anxiety, depression, and
+vulnerability. Neuroticism also refers to the degree of emotional stability and
+impulse control and is sometimes referred to by its low pole, "emotional
+stability".
+"""
+
+
+class Unit:
+    def __init__(self, v=0):
+        self.__val = v
+
+    def __mul__(self, other):
+        if type(other) in (int, float):
+            return type(self)(v=self.__val * other)
+        elif type(other) == type(self):
+            return type(self)(v=self.__val * other.val())
+        else:
+            s = "Can not mutiply types: {} and {}"
+            raise Exception(s.format(str(type(self)), str(type(other))))
+
+    def __imul__(self, other):
+        if type(other) in (int, float):
+            self.__val *= other
+        elif type(other) == type(self):
+            self.__val *= other.val()
+        else:
+            s = "Can not mutiply types: {} and {}"
+            raise Exception(s.format(str(type(self)), str(type(other))))
+
+    def __add__(self, other):
+        if type(other) == type(self):
+            return type(self)(v=self.__val + other.val())
+        else:
+            s = "Can not add types: {} and {}"
+            raise Exception(s.format(str(type(self)), str(type(other))))
+
+    def __iadd__(self, other):
+        if type(other) == type(self):
+            self.__val += other.val()
+        else:
+            s = "Can not add types: {} and {}"
+            raise Exception(s.format(str(type(self)), str(type(other))))
+
+    def val(self):
+        return self.__val
+
+
+class Length(Unit):
+    INCH = 0.0254
+    CM = 100
+    FT = 0.3048
+
+    def __init__(self, cm=0, m=0, ft=0, inch=0, v=0):
+        val = inch * self.INCH
+        val += ft * self.FT
+        val += m
+        val += v
+        val += cm * self.CM
+        Unit.__init__(self, v=val)
+
+    @staticmethod
+    def Inch():
+        return Length(inch=1)
+
+    @staticmethod
+    def Ioot():
+        return Length(ft=1)
+
+    @staticmethod
+    def Meter():
+        return Length(m=1)
+
+    @staticmethod
+    def Cm():
+        return Length(cm=1)
+
+    def imperial(self):
+        return (str(int(self.val() / self.FT)) + "'" +
+                str(int(self.val() % self.FT / self.INCH)) + "\"")
+
+    def metric(self):
+        s = str(int(self.val()))
+        cm = int(self.val() % 1 * self.CM)
+        if not cm == 0:
+            s += ".%02d" % int(self.val() % 1 * self.CM)
+        s += "m"
+        return s
+
+    def __str__(self):
+        return self.metric()
+
+    def cm(self):
+        return str(int(self.val() * self.CM)) + "cm"
+
+
+class Weight(Unit):
+    LB = 0.453592
+
+    def __init__(self, kg=0, lbs=0, v=0):
+        val = kg
+        val += lbs * self.LB
+        val += v
+        Unit.__init__(self, v=val)
+
+    @staticmethod
+    def Lb():
+        return Weight(lbs=1)
+
+    @staticmethod
+    def Kg():
+        return Weight(kg=1)
+
+    def imperial(self):
+        return str(int(self.val() / self.LB)) + " lbs"
+
+    def metric(self):
+        return str(round(self.val())) + "kg"
+
+    def __str__(self):
+        return self.metric()
+
+
+def roll(n):
+    return random.randint(1, n)
+
+gender = random.choice(genders)
+pronoun = "he" if gender == "male" else "she"
+
+"""
+Gender  Base Height Height Modifier Base Weight Weight Modifier
+Male    4’ 10”      +2d10           120 lb.     x (2d4) lb.
+Female  4’ 5”       +2d10           85 lb.      x (2d4) lb.
+"""
+
+size = roll(10) + roll(10)
+
+if gender == "male":
+    height = Length(ft=4, inch=10) + Length.Inch() * size
+    weight = Weight(lbs=120) + Weight(lbs=(roll(4) + roll(4))) * size
+else:
+    height = Length(ft=4, inch=5) + Length.Inch() * size
+    weight = Weight(lbs=85) + Weight(lbs=(roll(4) + roll(4))) * size
+
+if random.random() > .9:
+    hair = random.choice(c_hair_unusual)
+else:
+    hair = random.choice(c_hair)
+
+if random.random() > .9:
+    eyes = random.choice(c_eyes_unusual)
+else:
+    eyes = random.choice(c_eyes)
+
+rest = []
+
+law = 0
+good = 0
+
+def align(num):
+    if num == 0:
+        return 2
+    elif num == 1:
+        return 1
+    elif num == 2:
+        return -1
+    elif num == 3:
+        return -2
+
+for dimension in dimensions:
+    rand = random.randint(0, 3)
+    if dimension == "open":
+        law += align(rand)
+    elif dimension == "conscientious":
+        law -= align(rand)
+    elif dimension == "agreeable":
+        good += align(rand)
+    elif dimension == "neurotic":
+        good -= align(rand)
+        law += align(rand)
+    rest.append(values[dimension][rand])
+
+law += random.choice([1, 0, -1])
+good += random.choice([2, 1, 0, -1, -2])
+
+if law > 2:
+    lawfulness = "L"
+elif law < -2:
+    lawfulness = "C"
+else:
+    lawfulness = "N"
+
+if good > 1:
+    goodness = "G"
+elif good < -1:
+    goodness = "E"
+else:
+    goodness = "N"
+
+alignment = lawfulness + goodness
+
+s = "Your character is a {} ({}) {}, {} ({}) tall and weighs {} ({}). {} has "
+s = s.format(ALIGNMENT_LONG[alignment],
+             alignment,
+             gender, height.metric(),
+             height.imperial(),
+             weight.metric(),
+             weight.imperial(),
+             pronoun.capitalize())
+s += "{} hair and {} eyes.\n{} is ".format(hair, eyes, pronoun.capitalize())
+print(s, end="")
+print(", ".join(rest[:-1]) + ", and " + rest[-1] + ".")
+s = "Your character's alignment is {}{}."
