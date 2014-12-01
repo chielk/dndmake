@@ -1,5 +1,4 @@
 TODO
-* Non-uniform probabilities for things as hair colour
 
 MAYBE
 * Correlations between hair and eye colour

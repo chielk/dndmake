@@ -58,11 +58,24 @@ ALIGN = [2, 1, -1, -2]  # Character trait index to alignment score
 
 GENDERS = ["male", "female"]
 
-HAIR = ["black", "brown", "blond", "ginger"]
-HAIR_UNUSUAL = ["green", "blue", "white", "red"]
+HAIR = {"black": 20,
+        "brown": 35,
+        "blond": 15,
+        "ginger": 8,
+        "green": 1,
+        "blue": 1,
+        "white": 1,
+        "red": 1,
+        }
 
-EYES = ["blue", "brown", "green"]
-EYES_UNUSUAL = ["red", "violet"]
+EYES = {"blue": 20,
+        "brown": 40,
+        "green": 10,
+        "black": 10,
+        "red": 1,
+        "violet": 1,
+        }
+
 
 DIMENSIONS = ["open",  # chaos <-> law
               "conscientious",  # law <-> chaos
@@ -105,6 +118,21 @@ def score_to_alignment(law, good):
         goodness = "N"
 
     return lawfulness + goodness
+
+
+def get_random(distribution):
+    """return a random key from the distribution, where the probability is
+    proportional to the size of the value, relative to the sum of all values.
+    :param distribution: a dictionary of which the values are numerals
+    :returns: a random element from the keys of the distribution
+    """
+    total = sum(distribution.values())
+    r = random.random() * total
+    current = 0
+    for key, value in distribution.items():
+        current += value
+        if current > r:
+            return key
 
 
 def make_personality(wanted_alignment=None):
@@ -220,15 +248,8 @@ else:
     weight = Weight(lbs=85) + Weight(lbs=size_w) * size_h
 
 # Hair and eye colours
-if random.random() > .9:
-    hair = random.choice(HAIR_UNUSUAL)
-else:
-    hair = random.choice(HAIR)
-
-if random.random() > .9:
-    eyes = random.choice(EYES_UNUSUAL)
-else:
-    eyes = random.choice(EYES)
+hair = get_random(HAIR)
+eyes = get_random(EYES)
 
 # Output
 if args.name:
