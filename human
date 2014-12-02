@@ -176,7 +176,13 @@ def make_personality(wanted_alignment=None):
 
 
 # Parse command-line arguments
-parser = argparse.ArgumentParser(description="Generate a D&D human.")
+descr = """Generate a D&D human. It will generate a gender and a height and
+weight based on the gender. Furthermore they have a hair and eye colour and a
+personality based on the five-factor model (FFM), which influences their
+alignment. Gender, height, weight and alignment can also be influenced or
+forced through arguments."""
+
+parser = argparse.ArgumentParser(description=descr)
 parser.add_argument("-m", "--male", action="store_true",
                     help="Make a male human")
 parser.add_argument("-f", "--female", action="store_true",
@@ -238,7 +244,6 @@ else:
 # Gender  Base Height Height Modifier Base Weight Weight Modifier
 # Male    4' 10"      +2d10           120 lb.     x (2d4) lb.
 # Female  4' 5"       +2d10           85 lb.      x (2d4) lb.
-
 
 if gender == "male":
     height = Length(ft=4, inch=10) + Inch() * size_h
