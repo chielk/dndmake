@@ -176,11 +176,11 @@ def make_personality(wanted_alignment=None):
 
 
 # Parse command-line arguments
-descr = """Generate a D&D human. It will generate a gender and a height and
-weight based on the gender. Furthermore they have a hair and eye colour and a
-personality based on the five-factor model (FFM), which influences their
-alignment. Gender, height, weight and alignment can also be influenced or
-forced through arguments."""
+descr = """Generate a D&D human with a gender and a height and weight based on
+the gender. Furthermore they have a hair and eye colour and a personality based
+on the five-factor model (FFM), which influences their alignment. Gender,
+height, weight and alignment can also be influenced or forced through
+arguments."""
 
 parser = argparse.ArgumentParser(description=descr)
 parser.add_argument("-m", "--male", action="store_true",

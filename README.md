@@ -4,11 +4,10 @@ Generate a D&D human.
 
 Summary
 -------
-Generate a random human with height, weight according to D&D, hair and eye
-colour, and a personality based on the Big Five personality traits.
-The alignment of the human is based on its personality traits with a random
-component.
-Command-line arguments can force some aspects of the person.
+Generate a D&D human with a gender and a height and weight based on the gender.
+Furthermore they have a hair and eye colour and a personality based on the
+five-factor model (FFM), which influences their alignment. Gender, height,
+weight and alignment can also be influenced or forced through arguments.
 
 Usage
 -----
