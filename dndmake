@@ -34,86 +34,9 @@ impulse control and is sometimes referred to by its low pole, "emotional
 stability".
 """
 
-import random
 import argparse
 import sys
-from simpleunit import Unit, Length, Weight, Inch
-from races import Human
-from dice import roll
-
-
-def score_to_alignment(law, good):
-    """Convert a lawfulness and goodness score to an alignment."""
-    if law > 2:
-        lawfulness = "L"
-    elif law < -2:
-        lawfulness = "C"
-    else:
-        lawfulness = "N"
-
-    if good > 1:
-        goodness = "G"
-    elif good < -1:
-        goodness = "E"
-    else:
-        goodness = "N"
-
-    return lawfulness + goodness
-
-
-def get_random(distribution):
-    """return a random key from the distribution, where the probability is
-    proportional to the size of the value, relative to the sum of all values.
-    :param distribution: a dictionary of which the values are numerals
-    :returns: a random element from the keys of the distribution
-    """
-    total = sum(distribution.values())
-    r = random.random() * total
-    current = 0
-    for key, value in distribution.items():
-        current += value
-        if current > r:
-            return key
-
-
-def make_personality(race, wanted_alignment=None):
-    """Make a random personality based on the Big Five Personality Traits.
-    :param wanted_alignment: If a wanted alignment is given, it will make a
-                             personality that is consistent with that alignment
-    :returns: A tuple containing a personality and an alignment
-    """
-    while True:
-        law = 0
-        good = 0
-        personality = []
-        for dimension in race.DIMENSIONS:
-            rand = random.randint(0, 3)
-            if dimension == "open":
-                law -= race.ALIGN[rand]
-            elif dimension == "conscientious":
-                law += race.ALIGN[rand]
-            elif dimension == "agreeable":
-                good -= race.ALIGN[rand]
-            elif dimension == "neurotic":
-                good += race.ALIGN[rand]
-                law -= race.ALIGN[rand]
-            personality.append(race.VALUES[dimension][rand])
-
-        if not wanted_alignment:
-            # Add random element to alignment
-            law += random.choice(race.LAWFULNESS_VARIANCE)
-            good += random.choice(race.GOODNESS_VARIANCE)
-
-            alignment = score_to_alignment(law, good)
-            return alignment, personality
-        else:
-            for l in race.LAWFULNESS_VARIANCE:
-                for g in race.GOODNESS_VARIANCE:
-                    tmp_law = law + l
-                    tmp_good = good + g
-                    alignment = score_to_alignment(tmp_law, tmp_good)
-                    if alignment == wanted_alignment:
-                        return alignment, personality
+from simpleunit import Weight
 
 
 def parse_arguments():
@@ -147,22 +70,22 @@ def parse_arguments():
     if args.alignment and args.alignment not in race.ALIGNMENTS:
         print("Illegal alignment: {}".format(args.alignment), file=sys.stderr)
         print("Options are: {}.".format(", ".join(race.ALIGNMENTS)),
-              file=sys.stderr)
+                file=sys.stderr)
         sys.exit(1)
 
     if args.male and args.female:
         print("Can't make a charater that is both male and female.",
-              file=sys.stderr)
+                file=sys.stderr)
         sys.exit(1)
 
     if args.tall and args.short:
         print("Can't make a character that is both tall and short.",
-              file=sys.stderr)
+                file=sys.stderr)
         sys.exit(1)
 
     if args.heavy and args.light:
         print("Can't make a character that is both heavy and light.",
-              file=sys.stderr)
+                file=sys.stderr)
         sys.exit(1)
 
     return args
@@ -172,67 +95,10 @@ if __name__ == "__main__":
     args = parse_arguments()
 
     try:
-        race = getattr(__import__("races"), args.race.capitalize())
+        Race = getattr(__import__("races"), args.race.lower().capitalize())
     except AttributeError:
         print("Unknown race:", args.race, file=sys.stderr)
         sys.exit(1)
 
-    # Personality and alignment
-    alignment, personality = make_personality(race,
-                                              wanted_alignment=args.alignment)
-
-    # Gender
-    if args.male:
-        gender = race.Male
-    elif args.female:
-        gender = race.Female
-    else:
-        gender = random.choice(race.GENDERS)
-
-    pronoun = "he" if gender == race.Male else "she"
-
-    # Height and weight
-    if args.tall:
-        H_MOD = roll(race.H_MOD_TALL)
-    elif args.short:
-        H_MOD = roll(race.H_MOD_SHORT)
-    else:
-        H_MOD = roll(race.H_MOD)
-
-    if args.heavy:
-        W_MOD = roll(race.W_MOD_HEAVY)
-    elif args.light:
-        W_MOD = roll(race.W_MOD_LIGHT)
-    else:
-        W_MOD = roll(race.W_MOD)
-
-    height = gender.H_BASE + race.H_UNIT * H_MOD
-    weight = gender.W_BASE + Weight(**{race.W_UNIT: W_MOD}) * H_MOD
-
-    # Hair and eye colours
-    hair = get_random(race.HAIR)
-    eyes = get_random(race.EYES)
-
-    # Output
-    if args.name:
-        name = args.name
-    else:
-        name = "Your character"
-
-    s = "{} is a {} ({}) {} {}, {} ({}) tall and weighs {} ({}). {} has "\
-        "{} hair and {} eyes.\n{} is "
-    s = s.format(name,
-                 race.ALIGNMENT_LONG[alignment],
-                 alignment,
-                 gender.NAME,
-                 args.race,
-                 height.metric(),
-                 height.imperial(),
-                 weight.metric(),
-                 weight.imperial(),
-                 pronoun.capitalize(),
-                 hair,
-                 eyes,
-                 pronoun.capitalize())
-    s += ", ".join(personality[:-1]) + ", and " + personality[-1] + "."
-    print(s)
+    character = Race(args)
+    print(character)

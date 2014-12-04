@@ -92,25 +92,14 @@ class Weight(Unit):
         return self.metric()
 
 
-def Inch():
-    return Length(inch=1)
+Inch = Length(inch=1)
 
+Foot = Length(ft=1)
 
-def Ioot():
-    return Length(ft=1)
+Meter = Length(m=1)
 
+Cm = Length(cm=1)
 
-def Meter():
-    return Length(m=1)
+Lb = Weight(lbs=1)
 
-
-def Cm():
-    return Length(cm=1)
-
-
-def Lb():
-    return Weight(lbs=1)
-
-
-def Kg():
-    return Weight(kg=1)
+Kg = Weight(kg=1)

@@ -1,5 +1,6 @@
 from .race import Race
 from simpleunit import Length, Weight, Inch
+from dice import roll
 
 
 class Human(Race):
@@ -42,7 +43,7 @@ class Human(Race):
     H_MOD = "2d10"
     H_MOD_TALL = "d5 + d6 + 11"
     H_MOD_SHORT = "2d6"
-    H_UNIT = Inch()
+    H_UNIT = Inch
 
     W_MOD = "2d4"
     W_MOD_HEAVY = "d2 + d3 + 3"

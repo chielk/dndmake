@@ -39,11 +39,10 @@ class Elf(Race):
     # Male    4' 5"       +2d6            85 lb.      x (1d6) lb.
     # Female  4' 5"       +2d6            80 lb.      x (1d6) lb.
 
-
     H_MOD = "2d6"
     H_MOD_TALL = "2d4 + 4"
     H_MOD_SHORT = "2d4"
-    H_UNIT = Inch()
+    H_UNIT = Inch
 
     W_MOD = "1d6"
     W_MOD_HEAVY = "d3 + 3"
