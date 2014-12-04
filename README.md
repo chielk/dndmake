@@ -25,12 +25,12 @@ Positional arguments:
 Optional arguments:
 ```
   -h, --help            show this help message and exit
-  -m, --male            Make a male human
-  -f, --female          Make a female human
-  -t, --tall            Make a tall human
-  -s, --short           Make a short human
-  -b, --heavy           Make a heavy human
-  -l, --light           Make a light human
+  -m, --male            Make a male character
+  -f, --female          Make a female character
+  -t, --tall            Make a tall character
+  -s, --short           Make a short character
+  -b, --heavy           Make a heavy character
+  -l, --light           Make a light character
   -n NAME, --name NAME  Character name
 ```
 
