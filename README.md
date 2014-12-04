@@ -41,16 +41,16 @@ Usage (roll)
 ```
 
 Positional arguments
-'''
+```
   expression        Expression (e.g. 3d6 + 3)
-'''
+```
 
 Optional arguments:
-'''
+```
   -h, --help        show this help message and exit
   -v, --verbosity   Print individual dice and constants
   -e, --expectancy  Print expectancy instead of roll
-'''
+```
 
 
 Installation
