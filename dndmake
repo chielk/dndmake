@@ -39,7 +39,7 @@ import argparse
 import sys
 from simpleunit import Unit, Length, Weight, Inch
 from races import Human
-from roll import roll
+from dice import roll
 
 
 def score_to_alignment(law, good):

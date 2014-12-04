@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+# (c) Chiel Kooijman 2014
+import sys
+from dice import __roll
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Roll some dice')
+    parser.add_argument('expression', type=str, nargs='+',
+                        help='Expression (e.g. 3d6 + 3)')
+    parser.add_argument("-v", "--verbosity", action="count",
+                        help="Print individual dice and constants")
+    parser.add_argument("-e", "--expectancy", action="store_true",
+                        help="Print expectancy instead of roll")
+    args = parser.parse_args()
+    if not args.verbosity:
+        args.verbosity = 0
+
+    total, exp, min, max, components = __roll(args.expression)
+
+    # Output
+    if exp.is_integer():
+        exp = int(exp)  # Omit floating point
+    if args.expectancy:
+        if args.verbosity < 1:  # Print expectancy only
+            print(exp, end="")
+        else:  # Print min and max
+            print(exp, "\t[min: ", min, ", max: ", max, "]", sep="", end="")
+    else:
+        print(total, end=" ")
+        if args.verbosity and args.verbosity > 0:  # Print components
+            print("\t[" + components[:-3] + "]", end=" ")
+        if args.verbosity and args.verbosity > 0:  # Print expectancy
+            if args.verbosity > 1:
+                print("\t(exp: {}, min: {}, max: {}".format(exp, min, max),
+                      end=")")
+    print()

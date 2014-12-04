@@ -1,6 +1,8 @@
 dndmake
-=====
-Generate a D&D NPC.
+=======
+Provides:
+dndmake - Generate a D&D NPC.
+roll - roll dice and add constants as appropriate
 
 Summary
 -------
@@ -9,10 +11,10 @@ Furthermore they have a hair and eye colour and a personality based on the
 five-factor model (FFM), which influences their alignment. Gender, height,
 weight and alignment can also be influenced or forced through arguments.
 
-Usage
------
+Usage (dndmake)
+---------------
 ```
-human.py [-h] [-m] [-f] [-t] [-s] [-b] [-l] [-n NAME] [alignment]
+dndmake [-h] [-m] [-f] [-t] [-s] [-b] [-l] [-n NAME] race [alignment]
 ```
 Positional arguments:
 ```
@@ -31,6 +33,25 @@ Optional arguments:
   -l, --light           Make a light human
   -n NAME, --name NAME  Character name
 ```
+
+Usage (roll)
+------------
+```
+ roll [-h] [-v] [-e] expression [expression ...]
+```
+
+Positional arguments
+'''
+  expression        Expression (e.g. 3d6 + 3)
+'''
+
+Optional arguments:
+'''
+  -h, --help        show this help message and exit
+  -v, --verbosity   Print individual dice and constants
+  -e, --expectancy  Print expectancy instead of roll
+'''
+
 
 Installation
 ------------
