@@ -1,6 +1,6 @@
-human
+dndmake
 =====
-Generate a D&D human.
+Generate a D&D NPC.
 
 Summary
 -------
@@ -16,6 +16,7 @@ human.py [-h] [-m] [-f] [-t] [-s] [-b] [-l] [-n NAME] [alignment]
 ```
 Positional arguments:
 ```
+  race					e.g. human, elf
   alignment             Lawfulness and goodness: [LNC][GNE]
 ```
 
