@@ -8,7 +8,7 @@ if sys.version_info.major < 3:
     sys.exit(1)
 
 setup(name='dndmake',
-      version='1.1',
+      version='0.1',
       author="Chiel Kooijman",
       author_email="chiel999@gmail.com",
       description="Generate a D&D NPC or roll dice",
@@ -16,5 +16,6 @@ setup(name='dndmake',
       url="https://github.com/chielk/human",
       scripts=["dndmake", "roll"],
       py_modules=["simpleunit", "dice"],
-      packages=["races"]
+      packages=["races"],
+      data_files=[('/etc/bash_completion.d', ['extras/dndmake.completion'])],
       )

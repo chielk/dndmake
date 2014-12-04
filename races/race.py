@@ -5,6 +5,7 @@ import random
 
 
 class Race:
+    NAME = ""
     ALIGNMENT_LONG = {"LG": "Lawful Good",
                       "NG": "Neutral Good",
                       "CG": "Chaotic Good",
@@ -183,7 +184,7 @@ class Race:
                      self.ALIGNMENT_LONG[self.alignment],
                      self.alignment,
                      self.gender.NAME,
-                     type(self).__name__.lower(),
+                     self.NAME,
                      self.height.metric(),
                      self.height.imperial(),
                      self.weight.metric(),

@@ -3,6 +3,7 @@ from simpleunit import Length, Weight, Inch
 
 
 class Elf(Race):
+    NAME = "human"
     LAWFULNESS_VARIANCE = range(-1, 1)
     GOODNESS_VARIANCE = range(0, 4)
 

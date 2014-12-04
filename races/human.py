@@ -4,6 +4,8 @@ from dice import roll
 
 
 class Human(Race):
+    NAME = "human"
+
     LAWFULNESS_VARIANCE = range(-1, 1)
     GOODNESS_VARIANCE = range(-2, 2)
 

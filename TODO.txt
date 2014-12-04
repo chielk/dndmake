@@ -1,5 +1,0 @@
-TODO
-* Different species (including more likely personality traits and alignments)
-* Skin colour
-* Correlations between hair and eye colour (and skin)
-* config settings (i.e. probability of certain facial features)
