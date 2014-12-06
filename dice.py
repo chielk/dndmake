@@ -11,7 +11,7 @@ def __roll_dice(sides):
 
 def __roll(expression):
     total = 0
-    exp = 0  # Expected value
+    exp = 0.  # Expected value
     max = 0
     min = 0
     components = ""  # Values of individual rolls and constants
