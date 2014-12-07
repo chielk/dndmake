@@ -17,6 +17,7 @@ setup(name='dndmake',
       scripts=["dndmake", "roll"],
       py_modules=["simpleunit", "dice"],
       packages=["races"],
-      data_files=[('/etc/bash_completion.d', ['extras/dndmake.completion'])],
+      data_files=[('/etc/bash_completion.d', ['extras/dndmake.completion']),
+                  ('/etc/dndmake/races', ['races/human.py', 'races/elf.py'])],
       requires=["argparse (>=1.0)"],
       )

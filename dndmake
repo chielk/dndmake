@@ -36,6 +36,8 @@ stability".
 
 import argparse
 import sys
+import os
+from importlib.machinery import SourceFileLoader
 
 
 def parse_arguments():
@@ -69,26 +71,45 @@ def parse_arguments():
     if args.alignment and args.alignment not in race.ALIGNMENTS:
         print("Illegal alignment: {}".format(args.alignment), file=sys.stderr)
         print("Options are: {}.".format(", ".join(race.ALIGNMENTS)),
-                file=sys.stderr)
+              file=sys.stderr)
         sys.exit(1)
 
     if args.male and args.female:
         print("Can't make a charater that is both male and female.",
-                file=sys.stderr)
+              file=sys.stderr)
         sys.exit(1)
 
     if args.tall and args.short:
         print("Can't make a character that is both tall and short.",
-                file=sys.stderr)
+              file=sys.stderr)
         sys.exit(1)
 
     if args.heavy and args.light:
         print("Can't make a character that is both heavy and light.",
-                file=sys.stderr)
+              file=sys.stderr)
         sys.exit(1)
 
     return args
 
+
+def get_race(name=None):
+    sys.dont_write_bytecode=True
+    HOME = os.getenv("HOME")
+    RACES_DIR = os.path.join(HOME, ".dndmake", "races")
+    os.makedirs(RACES_DIR, exist_ok=True)
+
+    try:
+        loader = SourceFileLoader(name.capitalize(),
+                                  os.path.join(RACES_DIR, name + ".py"))
+        races = loader.load_module()
+        Race = getattr(races, args.race.lower().capitalize())
+    except FileNotFoundError:
+        RACES_DIR = "/etc/dndmake/races"
+        loader = SourceFileLoader(name.capitalize(),
+                                  os.path.join(RACES_DIR, name + ".py"))
+        races = loader.load_module()
+        Race = getattr(races, args.race.lower().capitalize())
+    return Race
 
 if __name__ == "__main__":
     args = parse_arguments()
@@ -96,8 +117,11 @@ if __name__ == "__main__":
     try:
         Race = getattr(__import__("races"), args.race.lower().capitalize())
     except AttributeError:
-        print("Unknown race:", args.race, file=sys.stderr)
-        sys.exit(1)
+        try:
+            Race = get_race(args.race.lower())
+        except FileNotFoundError:
+            print("Unknown race:", args.race, file=sys.stderr)
+            sys.exit(1)
 
     character = Race(args)
     print(character)

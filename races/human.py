@@ -1,11 +1,11 @@
-from .race import Race
+from races import Race
 
 
 class Human(Race):
     NAME = "human"
 
-    LAWFULNESS = (0, 1)
-    GOODNESS = (0, 2)
+    LAWFULNESS = (0, 1)  # mu, sigma
+    GOODNESS = (0, 2)  # mu, sigma
 
     HAIR = {"black": 20,
             "brown": 35,
