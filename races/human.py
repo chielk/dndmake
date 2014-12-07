@@ -27,17 +27,6 @@ class Human(Race):
             "violet": 1,
             }
 
-    VALUES = {"open": ("inventive and curious", "curious", "cautious",
-                       "cautious and conservative"),
-              "conscientious": ("efficient and organized", "organized",
-                                "a bit disorganized", "disorganized"),
-              "extravert": ("outgoing and energetic", "outgoing", "reserved",
-                            "solitary and reserved"),
-              "agreeable": ("friendly and compassionate", "friendly",
-                            "somewhat detached", "analytical and detached"),
-              "neurotic": ("quickly angered", "somewhat nervous", "calm",
-                           "calm and confident")}
-
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    4' 10"      +2d10           120 lb.     x (2d4) lb.
     # Female  4' 5"       +2d10           85 lb.      x (2d4) lb.
