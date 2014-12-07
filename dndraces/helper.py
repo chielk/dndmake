@@ -22,6 +22,7 @@ def normal_as_range(normal):
     mu, sdev = normal
     return range(mu - sdev, mu + sdev)
 
+
 def normal(normal):
     mu, sdev = normal
     return random.normal(mu, sdev)

@@ -37,7 +37,7 @@ stability".
 import argparse
 import sys
 import os
-from importlib.machinery import SourceFileLoader
+import dndraces
 
 
 def parse_arguments():
@@ -92,36 +92,14 @@ def parse_arguments():
     return args
 
 
-def get_race(name=None):
-    sys.dont_write_bytecode=True
-    HOME = os.getenv("HOME")
-    RACES_DIR = os.path.join(HOME, ".dndmake", "races")
-    os.makedirs(RACES_DIR, exist_ok=True)
-
-    try:
-        loader = SourceFileLoader(name.capitalize(),
-                                  os.path.join(RACES_DIR, name + ".py"))
-        races = loader.load_module()
-        Race = getattr(races, args.race.lower().capitalize())
-    except FileNotFoundError:
-        RACES_DIR = "/etc/dndmake/races"
-        loader = SourceFileLoader(name.capitalize(),
-                                  os.path.join(RACES_DIR, name + ".py"))
-        races = loader.load_module()
-        Race = getattr(races, args.race.lower().capitalize())
-    return Race
-
 if __name__ == "__main__":
     args = parse_arguments()
 
     try:
-        Race = getattr(__import__("races"), args.race.lower().capitalize())
-    except AttributeError:
-        try:
-            Race = get_race(args.race.lower())
-        except FileNotFoundError:
-            print("Unknown race:", args.race, file=sys.stderr)
-            sys.exit(1)
+        Race = dndraces.load_race(args.race)
+    except FileNotFoundError:
+        print("Unknown race:", args.race, file=sys.stderr)
+        sys.exit(1)
 
     character = Race(args)
     print(character)

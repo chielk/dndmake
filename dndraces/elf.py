@@ -1,4 +1,4 @@
-from races import Race
+from dndraces import Race
 
 
 class Elf(Race):
