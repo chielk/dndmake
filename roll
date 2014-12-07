@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Roll some dice')
     parser.add_argument('expression', type=str, nargs='+',
-                        help='Expression (e.g. 3d6 + 3)')
+                        help='Expression (e.g. 3d6+3)')
     parser.add_argument("-v", "--verbosity", action="count",
                         help="Print individual dice and constants")
     parser.add_argument("-e", "--expectancy", action="store_true",
