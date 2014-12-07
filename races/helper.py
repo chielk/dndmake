@@ -1,7 +1,7 @@
-import random
+from numpy import random
 
 
-def get_random(distribution):
+def sample(distribution):
     """return a random key from the distribution, where the probability is
     proportional to the size of the value, relative to the sum of all
     values.
@@ -16,3 +16,12 @@ def get_random(distribution):
         current += value
         if current > r:
             return key
+
+
+def normal_as_range(normal):
+    mu, sdev = normal
+    return range(mu - sdev, mu + sdev)
+
+def normal(normal):
+    mu, sdev = normal
+    return random.normal(mu, sdev)

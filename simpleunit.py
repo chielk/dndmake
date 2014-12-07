@@ -1,4 +1,5 @@
 # (c) Chiel Kooijman 2014
+import re
 
 
 class Unit:
@@ -54,6 +55,28 @@ class Length(Unit):
         val += cm * self.CM
         Unit.__init__(self, v=val)
 
+    @staticmethod
+    def parse(expression):
+        expression = expression.lower()
+        if expression == "ft":
+            return Length(ft=1)
+        elif expression == "inch":
+            return Length(inch=1)
+        elif expression == "m":
+            return Length(m=1)
+        elif expression == "cm":
+            return Length(cm=1)
+        else:
+            ft = re.findall("\d*\.\d+|\d+ ?(?='|ft)", expression)
+            ft = sum((float(v) for v in ft)) if ft else 0
+            inch = re.findall("\d*\.\d+|\d+ ?(?=\"|inch)", expression)
+            inch = sum((float(v) for v in inch)) if inch else 0
+            m = re.findall("\d*\.\d+|\d+ ?(?=m)", expression)
+            m = sum((float(v) for v in m)) if m else 0
+            cm = re.findall("\d*\.\d+|\d+ ?(?=cm)", expression)
+            cm = sum((float(v) for v in cm)) if cm else 0
+            return Length(m=m, cm=cm, ft=ft, inch=inch)
+
     def imperial(self):
         return (str(int(self.val() / self.FT)) + "'" +
                 str(int((self.val() % self.FT) / self.INCH)) + "\"")
@@ -76,11 +99,30 @@ class Length(Unit):
 class Weight(Unit):
     LB = 0.453592
 
-    def __init__(self, kg=0, lbs=0, v=0):
+    def __init__(self, kg=0, g=0, lbs=0, v=0):
         val = kg
+        val += g / 1000
         val += lbs * self.LB
         val += v
         Unit.__init__(self, v=val)
+
+    @staticmethod
+    def parse(expression):
+        expression = expression.lower()
+        if expression in ("lb", "lbs"):
+            return Weight(lbs=1)
+        elif expression == "kg":
+            return Weight(kg=1)
+        elif expression == "g":
+            return Weight(g=1)
+        else:
+            lbs = re.findall("\d*\.\d+|\d+ ?(?=lbs?)", expression)
+            lbs = sum((float(v) for v in lbs)) if lbs else 0
+            kg = re.findall("\d*\.\d+|\d+ ?(?=kg)", expression)
+            kg = sum((float(v) for v in kg)) if kg else 0
+            g = re.findall("\d*\.\d+|\d+ ?(?=g)", expression)
+            g = sum((float(v) for v in g)) if g else 0
+            return Weight(kg=kg, lbs=lbs, g=g)
 
     def imperial(self):
         return str(int(self.val() / self.LB)) + " lbs"

@@ -1,11 +1,11 @@
-from simpleunit import Length, Weight, Inch
+from simpleunit import Length, Weight
 from dice import roll
-from .helper import get_random
-import random
+from .helper import sample, normal, normal_as_range
+from numpy.random import randint, choice
 
 
 class Race:
-    NAME = ""
+    NAME = "base-race"
     ALIGNMENT_LONG = {"LG": "Lawful Good",
                       "NG": "Neutral Good",
                       "CG": "Chaotic Good",
@@ -24,10 +24,10 @@ class Race:
                   "conscientious",  # law <-> chaos
                   "extravert",
                   "agreeable",  # good <-> evil
-                  "neurotic"]  # evil <-> good, chaos <-> law
+                  "neurotic"]  # evil/2 <-> good/2, chaos <-> law
 
-    LAWFULNESS_VARIANCE = range(-1, 1)
-    GOODNESS_VARIANCE = range(-2, 2)
+    LAWFULNESS = (0, 1)  # mean, stddev
+    GOODNESS = (0, 2)  # mean, stddev
 
     HAIR = {"black": 1}
 
@@ -46,24 +46,24 @@ class Race:
 
     # Default values from Human
     H_MOD = "2d10"
-    H_MOD_TALL = "d5 + d6 + 11"
+    H_MOD_TALL = "d5+d6+11"
     H_MOD_SHORT = "2d6"
-    H_UNIT = Inch
+    H_UNIT = "inch"
 
     W_MOD = "2d4"
-    W_MOD_HEAVY = "d2 + d3 + 3"
-    W_MOD_LIGHT = "d2 + d3"
+    W_MOD_HEAVY = "d2+d3+3"
+    W_MOD_LIGHT = "d2+d3"
     W_UNIT = "lbs"
 
     class Male:
         NAME = "male"
-        H_BASE = Length(ft=4, inch=10)
-        W_BASE = Weight(lbs=120)
+        H_BASE = "4'10\""
+        W_BASE = "120lbs"
 
     class Female:
         NAME = "female"
-        H_BASE = Length(ft=4, inch=5)
-        W_BASE = Weight(lbs=85)
+        H_BASE = "4'5\""
+        W_BASE = "85lbs"
 
     GENDERS = [Male, Female]
 
@@ -88,8 +88,8 @@ class Race:
 
     def __init__(self, settings):
         # Hair and eye colours
-        self.hair = get_random(self.HAIR)
-        self.eyes = get_random(self.EYES)
+        self.hair = sample(self.HAIR)
+        self.eyes = sample(self.EYES)
 
         # Output
         if settings.name:
@@ -118,9 +118,12 @@ class Race:
         else:
             W_MOD = roll(self.W_MOD)
 
-        self.height = gender.H_BASE + self.H_UNIT * H_MOD
-        self.weight = gender.W_BASE + Weight(**{self.W_UNIT: W_MOD}) * H_MOD
+        H_BASE = Length.parse(gender.H_BASE)
+        H_UNIT = Length.parse(self.H_UNIT)
+        W_BASE = Weight.parse(gender.W_BASE)
 
+        self.height = H_BASE + H_UNIT * H_MOD
+        self.weight = W_BASE + Weight(**{self.W_UNIT: W_MOD}) * H_MOD
         return self.height, self.weight
 
     def make_personality(self, settings):
@@ -132,7 +135,7 @@ class Race:
             good = 0
             personality = []
             for dimension in self.DIMENSIONS:
-                rand = random.randint(0, 3)
+                rand = randint(0, 3)
                 if dimension == "open":
                     law -= self.ALIGN[rand]
                 elif dimension == "conscientious":
@@ -141,13 +144,13 @@ class Race:
                     good -= self.ALIGN[rand]
                 elif dimension == "neurotic":
                     good += self.ALIGN[rand]
-                    law -= self.ALIGN[rand]
+                    law -= self.ALIGN[rand] / 2
                 personality.append(self.VALUES[dimension][rand])
 
             if not settings.alignment:
                 # Add random element to alignment
-                law += random.choice(self.LAWFULNESS_VARIANCE)
-                good += random.choice(self.GOODNESS_VARIANCE)
+                law += normal(self.LAWFULNESS)
+                good += normal(self.GOODNESS)
 
                 alignment = Race.score_to_alignment(law, good)
 
@@ -155,8 +158,8 @@ class Race:
                 self.personality = personality
                 return alignment, personality
             else:
-                for l in self.LAWFULNESS_VARIANCE:
-                    for g in self.GOODNESS_VARIANCE:
+                for l in normal_as_range(self.LAWFULNESS):
+                    for g in normal_as_range(self.GOODNESS):
                         tmp_law = law + l
                         tmp_good = good + g
                         alignment = Race.score_to_alignment(tmp_law, tmp_good)
@@ -171,7 +174,7 @@ class Race:
         elif settings.female:
             self.gender = self.Female
         else:
-            self.gender = random.choice(self.GENDERS)
+            self.gender = choice(self.GENDERS)
 
         return self.gender
 

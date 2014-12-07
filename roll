@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # (c) Chiel Kooijman 2014
-import sys
 from dice import __roll
 
 

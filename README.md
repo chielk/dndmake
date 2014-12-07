@@ -42,7 +42,7 @@ Usage (roll)
 
 Positional arguments
 ```
-  expression        Expression (e.g. 3d6 + 3)
+  expression        Expression (e.g. 3d6+3)
 ```
 
 Optional arguments:

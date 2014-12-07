@@ -1,13 +1,11 @@
 from .race import Race
-from simpleunit import Length, Weight, Inch
-from dice import roll
 
 
 class Human(Race):
     NAME = "human"
 
-    LAWFULNESS_VARIANCE = range(-1, 1)
-    GOODNESS_VARIANCE = range(-2, 2)
+    LAWFULNESS = (0, 1)
+    GOODNESS = (0, 2)
 
     HAIR = {"black": 20,
             "brown": 35,
@@ -32,21 +30,21 @@ class Human(Race):
     # Female  4' 5"       +2d10           85 lb.      x (2d4) lb.
 
     H_MOD = "2d10"
-    H_MOD_TALL = "d5 + d6 + 11"
+    H_MOD_TALL = "d5+d6+11"
     H_MOD_SHORT = "2d6"
-    H_UNIT = Inch
+    H_UNIT = "inch"
 
     W_MOD = "2d4"
-    W_MOD_HEAVY = "d2 + d3 + 3"
-    W_MOD_LIGHT = "d2 + d3"
+    W_MOD_HEAVY = "d2+d3+3"
+    W_MOD_LIGHT = "d2+d3"
     W_UNIT = "lbs"
 
     class Male(Race.Male):
-        H_BASE = Length(ft=4, inch=10)
-        W_BASE = Weight(lbs=120)
+        H_BASE = "4'10\""
+        W_BASE = "120lbs"
 
     class Female(Race.Female):
-        H_BASE = Length(ft=4, inch=5)
-        W_BASE = Weight(lbs=85)
+        H_BASE = "4'5\""
+        W_BASE = "85lbs"
 
     GENDERS = [Male, Female]

@@ -36,7 +36,6 @@ stability".
 
 import argparse
 import sys
-from simpleunit import Weight
 
 
 def parse_arguments():

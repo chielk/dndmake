@@ -1,11 +1,10 @@
 from .race import Race
-from simpleunit import Length, Weight, Inch
 
 
 class Elf(Race):
-    NAME = "human"
-    LAWFULNESS_VARIANCE = range(-1, 1)
-    GOODNESS_VARIANCE = range(0, 4)
+    NAME = "elf"
+    LAWFULNESS = (0, 1)
+    GOODNESS = (1, 1)
 
     HAIR = {"black": 20,
             "brown": 35,
@@ -25,37 +24,26 @@ class Elf(Race):
             "violet": 1,
             }
 
-    VALUES = {"open": ("inventive and curious", "curious", "cautious",
-                       "cautious and conservative"),
-              "conscientious": ("efficient and organized", "organized",
-                                "a bit disorganized", "disorganized"),
-              "extravert": ("outgoing and energetic", "outgoing", "reserved",
-                            "solitary and reserved"),
-              "agreeable": ("friendly and compassionate", "friendly",
-                            "somewhat detached", "analytical and detached"),
-              "neurotic": ("quickly angered", "somewhat nervous", "calm",
-                           "calm and confident")}
-
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    4' 5"       +2d6            85 lb.      x (1d6) lb.
     # Female  4' 5"       +2d6            80 lb.      x (1d6) lb.
 
     H_MOD = "2d6"
-    H_MOD_TALL = "2d4 + 4"
+    H_MOD_TALL = "2d4+4"
     H_MOD_SHORT = "2d4"
-    H_UNIT = Inch
+    H_UNIT = "inch"
 
     W_MOD = "1d6"
-    W_MOD_HEAVY = "d3 + 3"
+    W_MOD_HEAVY = "d3+3"
     W_MOD_LIGHT = "d3"
     W_UNIT = "lbs"
 
     class Male(Race.Male):
-        H_BASE = Length(ft=4, inch=5)
-        W_BASE = Weight(lbs=85)
+        H_BASE = "4'5\""
+        W_BASE = "85lbs"
 
     class Female(Race.Female):
-        H_BASE = Length(ft=4, inch=5)
-        W_BASE = Weight(lbs=85)
+        H_BASE = "4'5\""
+        W_BASE = "85lbs"
 
     GENDERS = [Male, Female]

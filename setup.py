@@ -18,4 +18,5 @@ setup(name='dndmake',
       py_modules=["simpleunit", "dice"],
       packages=["races"],
       data_files=[('/etc/bash_completion.d', ['extras/dndmake.completion'])],
+      requires=["argparse (>=1.0)"],
       )
