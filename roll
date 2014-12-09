@@ -17,7 +17,12 @@ if __name__ == "__main__":
     if not args.verbosity:
         args.verbosity = 0
 
-    total, exp, min, max, components = __roll(args.expression)
+    result = __roll(args.expression)
+    total = result["total"]
+    exp = result["exp"]
+    min = result["min"]
+    max = result["max"]
+    components = result["str"]
 
     # Output
     if exp.is_integer():

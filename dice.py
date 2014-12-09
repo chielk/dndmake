@@ -5,12 +5,12 @@ import sys
 import re
 
 
-def __roll_dice(sides):
+def __roll_die(sides):
     """Roll a die."""
     return random.randint(1, sides)
 
 
-def __parse(part, add=True):
+def __roll_component(part, add=True):
     total = 0
     exp = 0.  # Expected value
     max = 0
@@ -33,14 +33,14 @@ def __parse(part, add=True):
                 exp += (dice + 1) / 2
                 max += dice
                 min += 1
-                roll = __roll_dice(dice)
+                roll = __roll_die(dice)
                 total += roll
                 components += str(roll) + "/" + str(dice) + " + "
             else:
                 exp -= (dice + 1) / 2
                 max -= dice
                 min -= 1
-                roll = __roll_dice(dice)
+                roll = __roll_die(dice)
                 total -= roll
                 components += str(roll) + "/" + str(dice) + " - "
     # Constants
@@ -63,7 +63,8 @@ def __parse(part, add=True):
             max -= const
             min -= const
             components += part + " - "
-    return total, exp, min, max, components
+    return {'total': total, 'exp': exp, 'min': min, 'max': max,
+            'str': components}
 
 
 def __roll(expression):
@@ -76,21 +77,25 @@ def __roll(expression):
     add = re.findall("(?!-)[\dd]+", "".join(expression))
     sub = [x[1:] for x in re.findall("(?:-)[\dd]+", "".join(expression))]
     for part in add:
-        _total, _exp, _min, _max, _components = __parse(part)
-        total += _total
-        exp += _exp
-        min += _min
-        max += _max
-        components += _components
+        result = __roll_component(part)
+        total += result["total"]
+        exp += result["exp"]
+        min += result["min"]
+        max += result["max"]
+        components += result["str"]
     for part in sub:
-        _total, _exp, _min, _max, _components = __parse(part, add=False)
-        total -= _total
-        exp -= _exp
-        min -= _min
-        max -= _max
-        components += _components
-    return total, exp, min, max, components
+        result = __roll_component(part)
+        total -= result["total"]
+        exp -= result["exp"]
+        min -= result["min"]
+        max -= result["max"]
+        components += result["str"]
+    return {'total': total, 'exp': exp, 'min': min, 'max': max,
+            'str': components}
 
 
-def roll(expression):
-    return __roll(expression)[0]
+def roll(expression, get="total"):
+    """Roll dice and add constants. Gives the total by default, but can also
+    give expectancy, minimum, maximum or a string representing all rolls.
+    """
+    return __roll(expression)[get]
