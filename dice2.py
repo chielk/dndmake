@@ -6,8 +6,8 @@ import re
 
 def roll(dice_expr):
     """
-    Operator to evaluate DiceExpressions to its random value. 
-    
+    Operator to evaluate DiceExpressions to its random value.
+
     Unparsed strings can be passed as well.
     """
     return dice_expr.__roll__()
@@ -16,7 +16,7 @@ def roll(dice_expr):
 def E(dice_expr):
     """
     Operator to evaluate DiceExpressions to its expectancy.
-    
+
     Unparsed strings can be passed as well.
     """
     return dice_expr.__expectancy__()
@@ -24,7 +24,10 @@ def E(dice_expr):
 
 class Element:
     def __init__(self, number):
-        self._number = int(number)
+        if number[0] in ["+", "-"]:
+            self._number = int(number[0] + number[1:].strip())
+        else:
+            self._number = int(number)
 
     def __max__(self):
         return self._number
@@ -47,33 +50,36 @@ class Element:
 
 class Dice(Element):
     def __init__(self, expression):
-        pattern = re.compile("(?P<number>\d*)d(?P<sides>\d+)")
+        pattern = re.compile("(?P<sign>[+-]?) *(?P<number>\d*)d(?P<sides>\d+)")
         dice = pattern.match(expression).groupdict()
 
+        self._sign = -1 if dice["sign"] == "-" else 1
         self._sides = int(dice["sides"]) if dice["sides"] else 0
         super().__init__(dice["number"])
 
     def __max__(self):
-        return self._number * self._sides
+        return self._sign * self._number * self._sides
 
     def __min__(self):
-        return self._number
+        return self._sign * self._number
 
     def __str__(self):
-        return "{}d{}".format(self._number, self._sides)
+        s = "-" if self._sign == -1 else ""
+        return s + "{}d{}".format(self._number, self._sides)
 
     def __roll_die(self):
         """Roll a single die."""
         return random.randint(1, self.sides)
 
     def __roll__(self):
-        return sum((self.__roll_die() for _ in range(self._number)))
+        return (self._sign *
+                sum((__roll_die(self.__sides) for _ in range(self._number))))
 
     def __expectancy__(self):
         expectancy = self._number * (self._sides + 1) / 2
         if expectancy.is_integer():
             expectancy = int(expectancy)  # Omit floating point
-        return expectancy
+        return self._sign * expectancy
 
     def __repr__(self):
         return 'dice.Dice("{}")'.format(self.__str__())
@@ -115,5 +121,11 @@ class DiceExpression:
 def __parse_dice_expression(expression):
     pattern = re.compile("([+-]? *\d*d?\d+)")
     template = pattern.sub("{}", expression)
-    asts = None
+    asts = []
+    for substring in pattern.findall(expression):
+        if "d" in substring
+            asts += Dice(substring)
+        else:
+            asts += Element(substring)
+
     return template, asts
