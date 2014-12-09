@@ -4,16 +4,21 @@ import random
 import re
 
 
-def __roll_die(sides):
-    """Roll a die."""
-    return random.randint(1, sides)
-
-
 def roll(dice_expr):
+    """
+    Operator to evaluate DiceExpressions to its random value. 
+    
+    Unparsed strings can be passed as well.
+    """
     return dice_expr.__roll__()
 
 
 def E(dice_expr):
+    """
+    Operator to evaluate DiceExpressions to its expectancy.
+    
+    Unparsed strings can be passed as well.
+    """
     return dice_expr.__expectancy__()
 
 
@@ -57,13 +62,17 @@ class Dice(Element):
     def __str__(self):
         return "{}d{}".format(self._number, self._sides)
 
+    def __roll_die(self):
+        """Roll a single die."""
+        return random.randint(1, self.sides)
+
     def __roll__(self):
-        return sum((__roll_die(self.__sides) for _ in range(self._number)))
+        return sum((self.__roll_die() for _ in range(self._number)))
 
     def __expectancy__(self):
         expectancy = self._number * (self._sides + 1) / 2
         if expectancy.is_integer():
-            expectancy = int(exp)  # Omit floating point
+            expectancy = int(expectancy)  # Omit floating point
         return expectancy
 
     def __repr__(self):
@@ -100,7 +109,7 @@ class DiceExpression:
         pass
 
     def __repr__(self):
-        return self._template % [str(ast) for ast in self._asts]
+        return self._template.format(str(ast) for ast in self._asts)
 
 
 def __parse_dice_expression(expression):
