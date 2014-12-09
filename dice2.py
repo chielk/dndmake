@@ -45,7 +45,7 @@ class Dice(Element):
         pattern = re.compile("(?P<number>\d*)d(?P<sides>\d+)")
         dice = pattern.match(expression).groupdict()
 
-        self._sides = int(dice["sides"])
+        self._sides = int(dice["sides"]) if dice["sides"] else 0
         super().__init__(dice["number"])
 
     def __max__(self):
@@ -101,3 +101,10 @@ class DiceExpression:
 
     def __repr__(self):
         return self._template % [str(ast) for ast in self._asts]
+
+
+def __parse_dice_expression(expression):
+    pattern = re.compile("([+-]? *\d*d?\d+)")
+    template = pattern.sub("{}", expression)
+    asts = None
+    return template, asts
