@@ -3,6 +3,12 @@
 import random
 import re
 
+
+def __roll_die(sides):
+    """Roll a die."""
+    return random.randint(1, sides)
+
+
 def roll(dice_expr):
     return dice_expr.__roll__()
 
@@ -11,30 +17,60 @@ def E(dice_expr):
     return dice_expr.__expectancy__()
 
 
-class Constant:
-    def __init__(self, value):
-        self._value = value
+class Element:
+    def __init__(self, number):
+        self._number = int(number)
 
     def __max__(self):
-        return self._value
+        return self._number
 
     def __min__(self):
-        return self._value
+        return self._number
 
     def __str__(self):
-        return str(self._value)
+        return str(self._number)
 
     def __roll__(self):
-        return self._value
+        return self._number
 
     def __expectancy__(self):
-        return self._value
+        return self._number
 
     def __repr__(self):
-        return "dice.Constant({})".format(self._value)
+        return 'dice.Element("{}")'.format(self._number)
 
 
-class Dice:
+class Dice(Element):
+    def __init__(self, expression):
+        pattern = re.compile("(?P<number>\d*)d(?P<sides>\d+)")
+        dice = pattern.match(expression).groupdict()
+
+        self._sides = int(dice["sides"])
+        super().__init__(dice["number"])
+
+    def __max__(self):
+        return self._number * self._sides
+
+    def __min__(self):
+        return self._number
+
+    def __str__(self):
+        return "{}d{}".format(self._number, self._sides)
+
+    def __roll__(self):
+        return sum((__roll_die(self.__sides) for _ in range(self._number)))
+
+    def __expectancy__(self):
+        expectancy = self._number * (self._sides + 1) / 2
+        if expectancy.is_integer():
+            expectancy = int(exp)  # Omit floating point
+        return expectancy
+
+    def __repr__(self):
+        return 'dice.Dice("{}")'.format(self.__str__())
+
+
+class DiceExpression:
     def __init__(self, expression):
         """
         Transform the string expression into some internal representation.
