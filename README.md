@@ -1,8 +1,9 @@
 dndmake
 =======
 Provides:
-dndmake - Generate a D&D NPC.
-roll - roll dice and add constants as appropriate
+- dndmake - Generate a D&D NPC.
+- dndwildshape - Generate a wildshaped D&D character.
+- roll - roll dice and add constants as appropriate
 
 Summary
 -------
@@ -34,6 +35,41 @@ Optional arguments:
   -n NAME, --name NAME  Character name
 ```
 
+Usage (dndwildshape)
+--------------------
+```
+dndwildshape [-h]
+             [-o {name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,climb,fly,swim}]
+             [-d] [-x EX] [-s {F,D,T,S,M,L,H,G,C}] [-a ANIMALS]
+             [-f OUTPUT_FILE]
+             [url]
+```
+
+Scrapes an online character sheet and applies all animal templates for
+wildshape stats.
+
+Positional arguments:
+```
+  url                   The URL of the sheet to scrape.
+```
+
+Optional arguments:
+```
+  -h, --help            show this help message and exit
+  -o {name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,climb,fly,swim}, --order {name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,climb,fly,swim}
+                        Sort results based on some property of the final form.
+  -d, --hd-cap          Only show results of animals with less HD than your
+                        level.
+  -x EX, --ex EX        Only show results that have this extraordinary special
+                        attack.
+  -s {F,D,T,S,M,L,H,G,C}, --size {F,D,T,S,M,L,H,G,C}
+                        Only show results of this size.
+  -a ANIMALS, --animals ANIMALS
+                        The tab-separated file with animal data.
+  -f OUTPUT_FILE, --output-file OUTPUT_FILE
+                        Write output to file, for easy future lookup.
+```
+
 Usage (roll)
 ------------
 ```
@@ -51,7 +87,6 @@ Optional arguments:
   -v, --verbosity   Print individual dice and constants
   -e, --expectancy  Print expectancy instead of roll
 ```
-
 
 Installation
 ------------

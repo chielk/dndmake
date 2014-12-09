@@ -1,5 +1,6 @@
 include README.md
 include dndmake
+include dndwildshape
 include species
 include simpleunit
 include roll
