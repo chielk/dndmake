@@ -73,7 +73,7 @@ Optional arguments:
 Usage (roll)
 ------------
 ```
- roll [-h] [-v] [-e] expression [expression ...]
+ roll [-h] [-v] [-e] [--min] [--max] expression [expression ...]
 ```
 
 Positional arguments
@@ -86,6 +86,8 @@ Optional arguments:
   -h, --help        show this help message and exit
   -v, --verbosity   Print individual dice and constants
   -e, --expectancy  Print expectancy instead of roll
+  --min             Print the minimum outcome
+  --max             Print the maximum outcome
 ```
 
 Installation

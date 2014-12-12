@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # (c) Chiel Kooijman 2014
-from dice2 import roll, E, min_val, max_val, DiceExpression
+from dice import roll, E, min_val, max_val, DiceExpression
 
 
 if __name__ == "__main__":
@@ -26,6 +26,8 @@ if __name__ == "__main__":
     exp = E(dice_expression)
     min = min_val(dice_expression)
     max = max_val(dice_expression)
+    s = str(dice_expression)
+    print(s)
 
     # Output
     if args.verbosity < 1:
