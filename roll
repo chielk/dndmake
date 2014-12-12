@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # (c) Chiel Kooijman 2014
-from dice import __roll
+from dice2 import roll, E, min_val, max_val, DiceExpression
 
 
 if __name__ == "__main__":
@@ -13,31 +13,33 @@ if __name__ == "__main__":
                         help="Print individual dice and constants")
     parser.add_argument("-e", "--expectancy", action="store_true",
                         help="Print expectancy instead of roll")
+    parser.add_argument("--min", action="store_true",
+                        help="Print minimum outcome")
+    parser.add_argument("--max", action="store_true",
+                        help="Print maximum outcome")
     args = parser.parse_args()
     if not args.verbosity:
         args.verbosity = 0
 
-    result = __roll(args.expression)
-    total = result["total"]
-    exp = result["exp"]
-    min = result["min"]
-    max = result["max"]
-    components = result["str"]
+    dice_expression = DiceExpression("".join(args.expression))
+    total = roll(dice_expression)
+    exp = E(dice_expression)
+    min = min_val(dice_expression)
+    max = max_val(dice_expression)
 
     # Output
-    if exp.is_integer():
-        exp = int(exp)  # Omit floating point
-    if args.expectancy:
-        if args.verbosity < 1:  # Print expectancy only
+    if args.verbosity < 1:
+        if args.expectancy:
             print(exp, end="")
-        else:  # Print min and max
-            print(exp, "\t[min: ", min, ", max: ", max, "]", sep="", end="")
+        elif args.min:
+            print(min, end="")
+        elif args.max:
+            print(max, end="")
+        else:
+            print(total, end=" ")
     else:
         print(total, end=" ")
-        if args.verbosity and args.verbosity > 0:  # Print components
-            print("\t[" + components[:-3] + "]", end=" ")
         if args.verbosity and args.verbosity > 0:  # Print expectancy
-            if args.verbosity > 1:
-                print("\t(exp: {}, min: {}, max: {}".format(exp, min, max),
-                      end=")")
+            print("\t(exp: {}, min: {}, max: {}".format(exp, min, max),
+                  end=")")
     print()
