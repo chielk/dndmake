@@ -27,7 +27,6 @@ if __name__ == "__main__":
     min = min_val(dice_expression)
     max = max_val(dice_expression)
     s = str(dice_expression)
-    print(s)
 
     # Output
     if args.verbosity < 1:
@@ -42,6 +41,6 @@ if __name__ == "__main__":
     else:
         print(total, end=" ")
         if args.verbosity and args.verbosity > 0:  # Print expectancy
-            print("\t(exp: {}, min: {}, max: {}".format(exp, min, max),
+            print("\t({}, exp: {}, min: {}, max: {}".format(s, exp, min, max),
                   end=")")
     print()
