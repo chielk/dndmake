@@ -20,5 +20,5 @@ setup(name='dndmake',
       data_files=[('/etc/bash_completion.d', ['extras/dndmake.completion']),
                   ('/etc/dndmake/races', ['dndraces/human.py',
                                           'dndraces/elf.py'])],
-      requires=["argparse (>=1.0)"],
+      requires=["argparse (>=1.0)", "numpy (>=1.8.2)"],
       )
