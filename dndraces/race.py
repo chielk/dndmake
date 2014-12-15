@@ -104,16 +104,16 @@ class Race:
         """Generate a height and weight given a race and gender."""
         gender = self.make_gender(settings)
 
-        if settings.tall:
+        if settings.height == "tall":
             H_MOD = roll(self.H_MOD_TALL)
-        elif settings.short:
+        elif settings.height == "short":
             H_MOD = roll(self.H_MOD_SHORT)
         else:
             H_MOD = roll(self.H_MOD)
 
-        if settings.heavy:
+        if settings.weight == "heavy":
             W_MOD = roll(self.W_MOD_HEAVY)
-        elif settings.light:
+        elif settings.weight == "light":
             W_MOD = roll(self.W_MOD_LIGHT)
         else:
             W_MOD = roll(self.W_MOD)
@@ -169,9 +169,9 @@ class Race:
                             return alignment, personality
 
     def make_gender(self, settings):
-        if settings.male:
+        if settings.gender == "male":
             self.gender = self.Male
-        elif settings.female:
+        elif settings.gender == "female":
             self.gender = self.Female
         else:
             self.gender = choice(self.GENDERS)

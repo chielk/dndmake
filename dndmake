@@ -40,6 +40,8 @@ import os
 import dndraces
 
 
+
+
 def parse_arguments():
     """Parse command-line arguments."""
 
@@ -50,42 +52,34 @@ def parse_arguments():
     forced through arguments."""
 
     parser = argparse.ArgumentParser(description=descr)
-    parser.add_argument("-m", "--male", action="store_true",
-                        help="Make a male character")
-    parser.add_argument("-f", "--female", action="store_true",
-                        help="Make a female character")
-    parser.add_argument("-t", "--tall", action="store_true",
-                        help="Make a tall character")
-    parser.add_argument("-s", "--short", action="store_true",
-                        help="Make a short character")
-    parser.add_argument("-b", "--heavy", action="store_true",
-                        help="Make a heavy character")
-    parser.add_argument("-l", "--light", action="store_true",
-                        help="Make a light character")
+
+    gender = parser.add_mutually_exclusive_group()
+    gender.add_argument("-m", "--male", action="store_const", const="male",
+                        dest="gender", help="Make a male character")
+    gender.add_argument("-f", "--female", action="store_const", const="female",
+                        dest="gender", help="Make a female character")
+
+    height = parser.add_mutually_exclusive_group()
+    height.add_argument("-t", "--tall", action="store_const", const="tall",
+                        dest="height", help="Make a tall character")
+    height.add_argument("-s", "--short", action="store_const", const="short",
+                        dest="height", help="Make a short character")
+
+    weight = parser.add_mutually_exclusive_group()
+    weight.add_argument("-b", "--heavy", action="store_const", const="heavy",
+                        dest="weight", help="Make a heavy character")
+    weight.add_argument("-l", "--light", action="store_const", const="light",
+                        dest="weight", help="Make a light character")
+
     parser.add_argument("race", help="e.g. human, elf")
     parser.add_argument("alignment", nargs="?", default=None,
                         help="Lawfulness and goodness: [LNC][GNE]")
     parser.add_argument("-n", "--name", help="Character name")
     args = parser.parse_args()
 
-    if args.alignment and args.alignment not in race.ALIGNMENTS:
+    if args.alignment and args.alignment not in dndraces.Race.ALIGNMENTS:
         print("Illegal alignment: {}".format(args.alignment), file=sys.stderr)
         print("Options are: {}.".format(", ".join(race.ALIGNMENTS)),
-              file=sys.stderr)
-        sys.exit(1)
-
-    if args.male and args.female:
-        print("Can't make a charater that is both male and female.",
-              file=sys.stderr)
-        sys.exit(1)
-
-    if args.tall and args.short:
-        print("Can't make a character that is both tall and short.",
-              file=sys.stderr)
-        sys.exit(1)
-
-    if args.heavy and args.light:
-        print("Can't make a character that is both heavy and light.",
               file=sys.stderr)
         sys.exit(1)
 
