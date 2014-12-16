@@ -196,8 +196,8 @@ class DiceExpression:
     def __expectancy__(self):
         """Return an iterable of expectancy values of each AST."""
         expectancy = sum(d.__expectancy__() for d in self._asts)
-        if expectancy.is_integer():
-            expectancy = int(expectancy)  # Omit floating point
+        #if expectancy.is_integer():
+        #    expectancy = int(expectancy)  # Omit floating point
         return expectancy
 
     def __repr__(self):
