@@ -44,6 +44,6 @@ class Elf(Race):
 
     class Female(Race.Female):
         H_BASE = "4'5\""
-        W_BASE = "85lbs"
+        W_BASE = "80lbs"
 
     GENDERS = [Male, Female]
