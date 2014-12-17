@@ -30,13 +30,9 @@ class Human(Race):
     # Female  4' 5"       +2d10           85 lb.      x (2d4) lb.
 
     H_MOD = "2d10"
-    H_MOD_TALL = "d5+d6+11"
-    H_MOD_SHORT = "2d6"
     H_UNIT = "inch"
 
     W_MOD = "2d4"
-    W_MOD_HEAVY = "d2+d3+3"
-    W_MOD_LIGHT = "d2+d3"
     W_UNIT = "lbs"
 
     class Male(Race.Male):
@@ -46,5 +42,3 @@ class Human(Race):
     class Female(Race.Female):
         H_BASE = "4'5\""
         W_BASE = "85lbs"
-
-    GENDERS = [Male, Female]

@@ -29,13 +29,9 @@ class Elf(Race):
     # Female  4' 5"       +2d6            80 lb.      x (1d6) lb.
 
     H_MOD = "2d6"
-    H_MOD_TALL = "2d4+4"
-    H_MOD_SHORT = "2d4"
     H_UNIT = "inch"
 
     W_MOD = "1d6"
-    W_MOD_HEAVY = "d3+3"
-    W_MOD_LIGHT = "d3"
     W_UNIT = "lbs"
 
     class Male(Race.Male):
@@ -45,5 +41,3 @@ class Elf(Race):
     class Female(Race.Female):
         H_BASE = "4'5\""
         W_BASE = "80lbs"
-
-    GENDERS = [Male, Female]

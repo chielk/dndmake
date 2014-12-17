@@ -1,5 +1,5 @@
 from simpleunit import Length, Weight
-from dice import roll
+from dice import roll, E
 from .helper import sample, normal, normal_as_range
 from numpy.random import randint, choice
 
@@ -46,13 +46,9 @@ class Race:
 
     # Default values from Human
     H_MOD = "2d10"
-    H_MOD_TALL = "d5+d6+11"
-    H_MOD_SHORT = "2d6"
     H_UNIT = "inch"
 
     W_MOD = "2d4"
-    W_MOD_HEAVY = "d2+d3+3"
-    W_MOD_LIGHT = "d2+d3"
     W_UNIT = "lbs"
 
     class Male:
@@ -105,16 +101,16 @@ class Race:
         gender = self.make_gender(settings)
 
         if settings.height == "tall":
-            H_MOD = roll(self.H_MOD_TALL)
+            H_MOD = (roll(self.H_MOD) + 2 * E(self.H_MOD)) / 3
         elif settings.height == "short":
-            H_MOD = roll(self.H_MOD_SHORT)
+            H_MOD = roll(self.H_MOD) / 2
         else:
             H_MOD = roll(self.H_MOD)
 
         if settings.weight == "heavy":
-            W_MOD = roll(self.W_MOD_HEAVY)
+            W_MOD = (roll(self.W_MOD) + 2 * E(self.W_MOD)) / 3
         elif settings.weight == "light":
-            W_MOD = roll(self.W_MOD_LIGHT)
+            W_MOD = roll(self.W_MOD) / 2
         else:
             W_MOD = roll(self.W_MOD)
 
