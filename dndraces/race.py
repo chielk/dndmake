@@ -126,7 +126,13 @@ class Race:
         """Make a random personality based on the Big Five Personality Traits.
         :returns: A tuple containing a personality and an alignment
         """
+        tries = 0
+        add_variance = 0
         while True:
+            if tries > 25:
+                add_variance += 1
+            tries += 1
+
             law = 0
             good = 0
             personality = []
@@ -154,8 +160,8 @@ class Race:
                 self.personality = personality
                 return alignment, personality
             else:
-                for l in normal_as_range(self.LAWFULNESS):
-                    for g in normal_as_range(self.GOODNESS):
+                for l in normal_as_range(self.LAWFULNESS, add=add_variance):
+                    for g in normal_as_range(self.GOODNESS, add=add_variance):
                         tmp_law = law + l
                         tmp_good = good + g
                         alignment = Race.score_to_alignment(tmp_law, tmp_good)

@@ -1,10 +1,10 @@
 from dndraces import Race
 
 
-class Elf(Race):
-    NAME = "elf"
-    LAWFULNESS = (-3, 2)  # mu, sigma
-    GOODNESS = (2, 2)  # mu, sigma
+class Dwarf(Race):
+    NAME = "dwarf"
+    LAWFULNESS = (2, 1)  # mu, sigma
+    GOODNESS = (1, 1)  # mu, sigma
 
     HAIR = {"black": 20,
             "brown": 35,
@@ -25,19 +25,19 @@ class Elf(Race):
             }
 
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
-    # Male    4' 5"       +2d6            85 lb.      x (1d6) lb.
-    # Female  4' 5"       +2d6            80 lb.      x (1d6) lb.
+    # Male    3' 9"       +2d4            130 lb.     x (2d6) lb.
+    # Female  3' 7"       +2d4            100 lb.     x (2d6) lb.
 
-    H_MOD = "2d6"
+    H_MOD = "2d4"
     H_UNIT = "inch"
 
-    W_MOD = "1d6"
+    W_MOD = "2d6"
     W_UNIT = "lbs"
 
     class Male(Race.Male):
-        H_BASE = "4'5\""
-        W_BASE = "85lbs"
+        H_BASE = "3'9\""
+        W_BASE = "130lbs"
 
     class Female(Race.Female):
-        H_BASE = "4'5\""
-        W_BASE = "80lbs"
+        H_BASE = "3'7\""
+        W_BASE = "100lbs"

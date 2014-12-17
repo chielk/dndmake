@@ -18,9 +18,9 @@ def sample(distribution):
             return key
 
 
-def normal_as_range(normal):
+def normal_as_range(normal, add=0):
     mu, sdev = normal
-    return range(mu - sdev, mu + sdev)
+    return range(mu - (sdev + add), mu + (sdev + add))
 
 
 def normal(normal):

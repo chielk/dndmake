@@ -21,6 +21,8 @@ setup(name='dndmake',
                   ('/etc/dndmake/races', ['dndraces/human.py',
                                           'dndraces/elf.py',
                                           'dndraces/half_elf.py',
+                                          'dndraces/half_orc.py',
+                                          'dndraces/halfling.py',
                                           'dndraces/dwarf.py'])],
       requires=["argparse (>=1.0)", "numpy (>=1.8.2)"],
       )
