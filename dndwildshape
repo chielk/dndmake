@@ -128,9 +128,9 @@ class Weapon(object):
         if not self.primary:
             damage_bonus = int(damage_bonus * 0.5)
 
-        output = self.name
+        output = self.name.lower()
         if self.number != 1:
-            output = str(self.number) + " " + output + "s"
+            output = str(self.number) + " " + output
         output += " " + str(attack_bonus)
         output += " ranged" if self.ranged else " melee"
         output += " (" + self.damage_die 
@@ -173,8 +173,11 @@ class Weapon(object):
             matches = re.search(pattern, weapon).groupdict()
             if matches['number'] is None:
                 matches['number'] = 1
-            if 'ranged' not in matches:
-                matches['ranged'] = 'melee'
+            ranged = True
+            if 'ranged' in matches:
+                if matches['ranged'] is None or 'melee' in matches['ranged']:
+                    ranged = False
+            matches['ranged'] = ranged
             w = Weapon(primary=is_first&primary, **matches)
             weapons.append(w)
             if is_first and primary:
@@ -206,7 +209,7 @@ class Speed(object):
             mode, spd, manouv = re.search(self.SPEED_PATTERN, speed).groups()
             if not len(mode):
                 mode = 'land'
-            self._speeds[mode] = spd
+            self._speeds[mode] = int(spd)
             if manouv is not None:
                 self.manouvrability = manouv
 
@@ -369,9 +372,9 @@ Int: {0.int: >2} ({0.intMod: >+3}) | Fort:   {0.fort}
 Wis: {0.wis: >2} ({0.wisMod: >+3}) | Reflex: {0.reflex}
 Cha: {0.cha: >2} ({0.chaMod: >+3}) | Will:   {0.will}
 -----------------------------------------------------------------------------
-Melee:   {0.meleeAttack}
+Melee:   {0.melee}
 Grapple: {0.grapple}
-Ranged:  {0.rangedAttack}
+Ranged:  {0.ranged}
 Full:    {0.fullAttack}
 Ex:      {0.exAttacks}
 Speed:   {0.speed}
@@ -522,7 +525,8 @@ Loads,4: L: {2[0]}, M: {2[1]}, H: {2[2]}
 
     @property
     def touchAC(self):
-        return (self.dexMod
+        return (10
+                + self.dexMod
                 + self.size.ac_modifier
                 + self._fields['ACOther']
                 + self._fields['ACDeflect']
@@ -530,7 +534,7 @@ Loads,4: L: {2[0]}, M: {2[1]}, H: {2[2]}
 
     @property
     def flatFootedAC(self):
-        return (0
+        return (10
                 + self.size.ac_modifier
                 + self._fields['ACArmor']
                 + self._fields['ACShield']
@@ -553,7 +557,7 @@ Loads,4: L: {2[0]}, M: {2[1]}, H: {2[2]}
         return self._fields['MBAB']
 
     @property
-    def meleeAttack(self):
+    def melee(self):
         return (self.strMod
                 + self.size.ac_modifier
                 + self.bab
@@ -569,7 +573,7 @@ Loads,4: L: {2[0]}, M: {2[1]}, H: {2[2]}
                 + self._fields['GABTemp'])
 
     @property
-    def rangedAttack(self):
+    def ranged(self):
         return (self.dexMod
                 + self.size.ac_modifier
                 + self.bab
@@ -585,7 +589,7 @@ Loads,4: L: {2[0]}, M: {2[1]}, H: {2[2]}
         weapons = []
         for weapon in self._fields['NaturalWeapons']:
             weapon.set_ability(self.str, self.dex)
-            weapon.set_attack_bonus(self.meleeAttack, self.rangedAttack)
+            weapon.set_attack_bonus(self.melee, self.ranged)
             weapons.append(weapon)
         return ' and '.join(str(w) for w in weapons)
 
@@ -700,8 +704,8 @@ def write_to_file(filename, wildshapes):
 _ORDER_KEYS = ['name', 'size', 'ac', 'init',
                'str', 'dex', 'con', 'int', 'wis', 'cha',
                'fort', 'reflex', 'will',
-               'melee', 'grapple', 'ranged',
-               'land', 'burrow', 'climb', 'fly', 'swim']
+               'melee', 'grapple', 'ranged'] +\
+              [modus for modus in Speed.MODUS if modus]  # Remove empty string
 
 def setup_argparser():
     arg_parser = argparse.ArgumentParser(
@@ -731,8 +735,10 @@ def setup_argparser():
 
 
 def wildshape_sort_key(key):
-    if key in ['land', 'burrow', 'climb', 'fly', 'swim']:
+    if key in [modus for modus in Speed.MODUS if modus]:  # Remove empty str
         return lambda x: getattr(x.speed, key)
+    elif key in ['melee', 'grapple', 'ranged']:
+        return lambda x: getattr(x, key)[0]
     else:
         return lambda x: getattr(x, key)
 
