@@ -191,7 +191,7 @@ class Speed(object):
     
     Each movement mode (land, burrow, swim, climb, fly) are accessible as
     fields from the object.  If it has a fly speed, it also has a
-    manouvrability field.
+    maneuvrability field.
     """
     UNIT = 'ft.'
     MODUS = ['', 'land', 'burrow', 'swim', 'climb', 'fly']
@@ -203,15 +203,15 @@ class Speed(object):
         if type(speed_str) is Speed:
             speed_str = str(speed_str)
         self._speeds = {}
-        self.manouvrability = None
+        self.maneuvrability = None
         speed_str = re.sub(r'\(\d+ squares?\)', r'', speed_str.lower())
         for speed in (s.strip() for s in speed_str.split(',')):
-            mode, spd, manouv = re.search(self.SPEED_PATTERN, speed).groups()
+            mode, spd, maneuv = re.search(self.SPEED_PATTERN, speed).groups()
             if not len(mode):
                 mode = 'land'
             self._speeds[mode] = int(spd)
-            if manouv is not None:
-                self.manouvrability = manouv
+            if maneuv is not None:
+                self.maneuvrability = maneuv
 
     @property
     def land(self):
@@ -244,7 +244,7 @@ class Speed(object):
         if self.swim:
             output.append(' '.join(['swim', str(self.swim), self.UNIT]))
         if self.fly:
-            output.append(' '.join(['fly', str(self.fly), self.UNIT, '(%s)' % self.manouvrability]))
+            output.append(' '.join(['fly', str(self.fly), self.UNIT, '(%s)' % self.maneuvrability]))
         return ', '.join(output).capitalize()
 
     def __repr__(self):
