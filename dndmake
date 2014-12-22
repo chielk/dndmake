@@ -95,5 +95,6 @@ if __name__ == "__main__":
         print("Unknown race:", args.race, file=sys.stderr)
         sys.exit(1)
 
-    character = Race(args)
+    character = Race(name=args.name, gender=args.gender, height=args.height,
+                     weight=args.weight, alignment=args.alignment)
     print(character)

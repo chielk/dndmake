@@ -82,34 +82,35 @@ class Race:
 
         return lawfulness + goodness
 
-    def __init__(self, settings):
+    def __init__(self, name=None, gender=None, height=None, weight=None,
+                 alignment=None):
         # Hair and eye colours
         self.hair = sample(self.HAIR)
         self.eyes = sample(self.EYES)
 
         # Output
-        if settings.name:
-            self.name = settings.name
+        if name:
+            self.name = name
         else:
             self.name = "Your character"
 
-        self.make_height_weight(settings)
-        self.make_personality(settings)
+        self.make_height_weight(gender=gender, height=height, weight=weight)
+        self.make_personality(alignment=alignment)
 
-    def make_height_weight(self, settings):
+    def make_height_weight(self, gender=None, height=None, weight=None):
         """Generate a height and weight given a race and gender."""
-        gender = self.make_gender(settings)
+        gender = self.make_gender(gender)
 
-        if settings.height == "tall":
+        if height == "tall":
             H_MOD = (roll(self.H_MOD) + 2 * E(self.H_MOD)) / 3
-        elif settings.height == "short":
+        elif height == "short":
             H_MOD = roll(self.H_MOD) / 2
         else:
             H_MOD = roll(self.H_MOD)
 
-        if settings.weight == "heavy":
+        if weight == "heavy":
             W_MOD = (roll(self.W_MOD) + 2 * E(self.W_MOD)) / 3
-        elif settings.weight == "light":
+        elif weight == "light":
             W_MOD = roll(self.W_MOD) / 2
         else:
             W_MOD = roll(self.W_MOD)
@@ -122,7 +123,7 @@ class Race:
         self.weight = W_BASE + Weight(**{self.W_UNIT: W_MOD}) * H_MOD
         return self.height, self.weight
 
-    def make_personality(self, settings):
+    def make_personality(self, alignment=None):
         """Make a random personality based on the Big Five Personality Traits.
         :returns: A tuple containing a personality and an alignment
         """
@@ -136,6 +137,7 @@ class Race:
             law = 0
             good = 0
             personality = []
+            wanted_alignment = alignment
             for dimension in self.DIMENSIONS:
                 rand = randint(0, 3)
                 if dimension == "open":
@@ -149,7 +151,7 @@ class Race:
                     law -= self.ALIGN[rand] / 2
                 personality.append(self.VALUES[dimension][rand])
 
-            if not settings.alignment:
+            if not alignment:
                 # Add random element to alignment
                 law += normal(self.LAWFULNESS)
                 good += normal(self.GOODNESS)
@@ -165,15 +167,15 @@ class Race:
                         tmp_law = law + l
                         tmp_good = good + g
                         alignment = Race.score_to_alignment(tmp_law, tmp_good)
-                        if alignment == settings.alignment:
+                        if alignment == wanted_alignment:
                             self.alignment = alignment
                             self.personality = personality
                             return alignment, personality
 
-    def make_gender(self, settings):
-        if settings.gender == "male":
+    def make_gender(self, gender):
+        if gender == "male":
             self.gender = self.Male
-        elif settings.gender == "female":
+        elif gender == "female":
             self.gender = self.Female
         else:
             self.gender = choice(self.GENDERS)
@@ -181,7 +183,7 @@ class Race:
         return self.gender
 
     def __str__(self):
-        pronoun = "he" if self.gender == self.Male else "she"
+        pronoun = "he" if self.gender.__name__ == self.Male.__name__ else "she"
 
         s = "{} is a {} ({}) {} {}, {} ({}) tall and weighs {} ({}). {} has "\
             "{} hair and {} eyes.\n{} is "
