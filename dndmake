@@ -40,8 +40,6 @@ import os
 import dndraces
 
 
-
-
 def parse_arguments():
     """Parse command-line arguments."""
 
@@ -71,8 +69,11 @@ def parse_arguments():
     weight.add_argument("-l", "--light", action="store_const", const="light",
                         dest="weight", help="Make a light character")
 
-    parser.add_argument("race", help="e.g. human, elf")
-    parser.add_argument("alignment", nargs="?", default=None,
+    parser.add_argument("race", choices=dndraces.list_races(),
+                        help="e.g. human, elf")
+
+    parser.add_argument("alignment", choices=dndraces.Race.ALIGNMENTS,
+                        nargs="?", default=None,
                         help="Lawfulness and goodness: [LNC][GNE]")
     parser.add_argument("-n", "--name", help="Character name")
     args = parser.parse_args()
@@ -88,7 +89,6 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-
     try:
         Race = dndraces.load_race(args.race)
     except FileNotFoundError:

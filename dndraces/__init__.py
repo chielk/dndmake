@@ -5,3 +5,4 @@ from .dwarf import Dwarf
 from .gnome import Gnome
 from .half_elf import HalfElf
 from .load import load_race
+from .load import list_races

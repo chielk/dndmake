@@ -3,6 +3,16 @@ import re
 import sys
 import os
 
+HOME = os.getenv("HOME")
+HOME_RACES = os.path.join(HOME, ".dndmake", "races")
+ETC_RACES = "/etc/dndmake/races"
+
+
+def list_races():
+    classes = os.listdir(HOME_RACES)
+    classes += os.listdir(ETC_RACES)
+    return [cls.split('.')[0].replace('_', '-') for cls in classes]
+
 
 def load_race(name):
     base_name = name.lower()
@@ -10,8 +20,8 @@ def load_race(name):
     class_name = ''.join(part.capitalize() for part in base_name.split('-'))
 
     HOME = os.getenv("HOME")
-    RACES = os.path.join(HOME, ".dndmake", "races")
-    os.makedirs(RACES, exist_ok=True)
+    HOME_RACES = os.path.join(HOME, ".dndmake", "races")
+    os.makedirs(HOME_RACES, exist_ok=True)
 
     try:
         # from this library
@@ -22,15 +32,14 @@ def load_race(name):
         try:
             # from $HOME
             loader = SourceFileLoader(class_name,
-                                      os.path.join(RACES, file_name))
+                                      os.path.join(HOME_RACES, file_name))
             races = loader.load_module()
             Race = getattr(races, class_name)
         except FileNotFoundError:
             try:
                 # from /etc
-                RACES = "/etc/dndmake/races"
                 loader = SourceFileLoader(class_name,
-                                          os.path.join(RACES, file_name))
+                                          os.path.join(ETC_RACES, file_name))
                 races = loader.load_module()
                 Race = getattr(races, class_name)
             except FileNotFoundError:

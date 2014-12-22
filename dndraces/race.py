@@ -129,6 +129,7 @@ class Race:
         """
         tries = 0
         add_variance = 0
+        wanted_alignment = alignment
         while True:
             if tries > 25:
                 add_variance += 1
@@ -137,7 +138,6 @@ class Race:
             law = 0
             good = 0
             personality = []
-            wanted_alignment = alignment
             for dimension in self.DIMENSIONS:
                 rand = randint(0, 3)
                 if dimension == "open":
@@ -151,7 +151,7 @@ class Race:
                     law -= self.ALIGN[rand] / 2
                 personality.append(self.VALUES[dimension][rand])
 
-            if not alignment:
+            if not wanted_alignment:
                 # Add random element to alignment
                 law += normal(self.LAWFULNESS)
                 good += normal(self.GOODNESS)
