@@ -4,7 +4,7 @@ _dndmake()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="-m --male -f --female -t --tall -s --short -b --heavy -l --light"
+    opts="-h --help -m --male -f --female -t --tall -s --short -b --heavy -l --light"
 	races="`{ ls /etc/dndmake/races ; ls ~/.dndmake/races ; } | sed s/_/-/g | sed s/.py//g`"
 	alignments="LG NG CG LN NN CN LE NE CE"
 	opts="$opts $races $alignments"

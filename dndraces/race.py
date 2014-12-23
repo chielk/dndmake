@@ -131,7 +131,6 @@ class Race:
         self.weight = W_BASE + Weight(**{self.W_UNIT: W_MOD}) * H_MOD
         return self.height, self.weight
 
-
     def random_personality(self):
         """Generate a random personality according to the sample probabilities
         provided by VALUES of the class.
@@ -153,7 +152,6 @@ class Race:
                 law -= val / 2
             personality.append(dim)
         return law, good, personality
-
 
     def make_personality(self, alignment=None):
         """Make a random personality based on the Big Five Personality Traits.

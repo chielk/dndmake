@@ -41,6 +41,6 @@ if __name__ == "__main__":
     else:
         print(total, end=" ")
         if args.verbosity and args.verbosity > 0:  # Print expectancy
-            print("\t({}, exp: {}, min: {}, max: {}".format(s, exp, min, max),
+            print("\t(exp: {}, min: {}, max: {}".format(exp, min, max),
                   end=")")
     print()

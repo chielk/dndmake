@@ -4,49 +4,6 @@ import random
 import re
 
 
-"""
-So, this sucks.  Each identifier for a named group can only occur once in a
-regular expression.  This means that the below expression is invalid, and
-when _EXPR_PATTERN is re.compile()d, it will raise an sre_constants.error.
-
-Even if this is fixed, each named group only stores its most recent match.
-This results in the following output:
-    >>> re.match(r"(?:(?P<x>\d)\S)*", "0q1q2q").groups()
-    ('2',)
-    >>> re.match(r"(?:(?P<x>\d)\S)*", "0q1q2q").groupdict()
-    {'x': '2'}
-
-However, I hoped for something like this:
-    >>> re.match(r"(?:(?P<x>\d)\S)*", "0q1q2q").groups()
-    ('0', '1', '2')
-    >>> re.match(r"(?:(?P<x>\d)\S)*", "0q1q2q").groupdict()
-    {'x': ['0', '1', '2']}
-
-This is not the case.  We should look for some elegant solution for this, of
-course, instead of rolling out some ugly hack.
-
-The patterns are still provided as a clear representation of the grammar.
-
-UPDATE: We are probably trying to write a "recursive grammar" (see [1]).  It
-is suggested to write a recursive descend parser [2] by hand, or have a look
-at pyparsing [3].  That library has some examples [4] that we can build upon,
-such as 'fourFn.py', 'simpleCalc.py' and 'ebnf.py', or simply 'dice2.py'.
-
-[1]: http://stackoverflow.com/questions/5060659/python-regexes-how-to-access-multiple-matches-of-a-group
-[2]: http://en.wikipedia.org/wiki/Recursive_descent_parser
-[3]: http://pyparsing.wikispaces.com/
-[4]: http://pyparsing.wikispaces.com/Examples
-"""
-
-_DIE_PATTERN = r"(?P<die>(?P<sides>\d*)d(?P<number>\d+))"
-_ELEM_PATTERN = r"(?P<elem>(?P<number>\d+))"
-_SIGN_PATTERN = r"(?:\s*(?P<sign>[+-])\s*)"
-_ELEMENT_PATTERN = r"(?P<element>{die}|{elem})".\
-    format(elem=_ELEM_PATTERN, die=_DIE_PATTERN)
-_EXPR_PATTERN = r"(?:{sign})*{element}(?:{sign}+{element})*".\
-    format(sign=_SIGN_PATTERN, element=_ELEMENT_PATTERN)
-
-
 def roll(dice_expr):
     """
     Operator to evaluate DiceExpressions to its random value.
