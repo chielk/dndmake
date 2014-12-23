@@ -18,8 +18,6 @@ class Race:
 
     ALIGNMENTS = ALIGNMENT_LONG.keys()
 
-    ALIGN = range(-2, 2)  # Character trait index to alignment score
-
     DIMENSIONS = ["open",  # chaos <-> law
                   "conscientious",  # law <-> chaos
                   "extravert",
@@ -33,16 +31,26 @@ class Race:
 
     EYES = {"brown": 1}
 
-    VALUES = {"open": ("inventive and curious", "curious", "cautious",
-                       "cautious and conservative"),
-              "conscientious": ("efficient and organized", "organized",
-                                "a bit disorganized", "disorganized"),
-              "extravert": ("outgoing and energetic", "outgoing", "reserved",
-                            "solitary and reserved"),
-              "agreeable": ("friendly and compassionate", "friendly",
-                            "somewhat detached", "analytical and detached"),
-              "neurotic": ("quickly angered", "somewhat nervous", "calm",
-                           "calm and confident")}
+    VALUES = {"open": {("inventive and curious", 2): 1,
+                       ("curious", 1): 1,
+                       ("cautious", -1): 1,
+                       ("cautious and conservative", -2): 1},
+              "conscientious": {("efficient and organized", 2): 1,
+                                ("organized", 1): 1,
+                                ("a bit disorganized", -1): 1,
+                                ("disorganized", -2): 1},
+              "extravert": {("outgoing and energetic", 2): 1,
+                            ("outgoing", 1): 1,
+                            ("reserved", -1): 1,
+                            ("solitary and reserved", -2): 1},
+              "agreeable": {("friendly and compassionate", 2): 1,
+                            ("friendly", 1): 1,
+                            ("somewhat detached", -1): 1,
+                            ("analytical and detached", -2): 1},
+              "neurotic": {("quickly angered", 2): 1,
+                           ("somewhat nervous", 1): 1,
+                           ("calm", -1): 1,
+                           ("calm and confident", -2): 1}}
 
     # Default values from Human
     H_MOD = "2d10"
@@ -123,8 +131,33 @@ class Race:
         self.weight = W_BASE + Weight(**{self.W_UNIT: W_MOD}) * H_MOD
         return self.height, self.weight
 
+
+    def random_personality(self):
+        """Generate a random personality according to the sample probabilities
+        provided by VALUES of the class.
+        :returns: lawfulness and goodness scores, and a personality
+        """
+        law = 0
+        good = 0
+        personality = []
+        for dimension in self.DIMENSIONS:
+            dim, val = sample(self.VALUES[dimension])
+            if dimension == "open":
+                law -= val
+            elif dimension == "conscientious":
+                law += val
+            elif dimension == "agreeable":
+                good -= val
+            elif dimension == "neurotic":
+                good += val
+                law -= val / 2
+            personality.append(dim)
+        return law, good, personality
+
+
     def make_personality(self, alignment=None):
         """Make a random personality based on the Big Five Personality Traits.
+        Tries to make a personality consistent with the alignment if given.
         :returns: A tuple containing a personality and an alignment
         """
         tries = 0
@@ -135,21 +168,7 @@ class Race:
                 add_variance += 1
             tries += 1
 
-            law = 0
-            good = 0
-            personality = []
-            for dimension in self.DIMENSIONS:
-                rand = randint(0, 3)
-                if dimension == "open":
-                    law -= self.ALIGN[rand]
-                elif dimension == "conscientious":
-                    law += self.ALIGN[rand]
-                elif dimension == "agreeable":
-                    good -= self.ALIGN[rand]
-                elif dimension == "neurotic":
-                    good += self.ALIGN[rand]
-                    law -= self.ALIGN[rand] / 2
-                personality.append(self.VALUES[dimension][rand])
+            law, good, personality = self.random_personality()
 
             if not wanted_alignment:
                 # Add random element to alignment
