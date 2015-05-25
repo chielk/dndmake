@@ -20,7 +20,7 @@ def sample(distribution):
 
 def normal_as_range(normal, add=0):
     mu, sdev = normal
-    return range(mu - (sdev + add), mu + (sdev + add))
+    return range(round(mu - (sdev + add)), round(mu + (sdev + add)))
 
 
 def normal(normal):
