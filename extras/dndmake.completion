@@ -1,4 +1,4 @@
-_dndmake() 
+_dndmake()
 {
     local cur prev opts
     COMPREPLY=()
