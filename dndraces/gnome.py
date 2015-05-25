@@ -24,11 +24,11 @@ class Gnome(Race):
             "violet": 1,
             }
 
-    MALE_NAME = ["Boddynock", "Dimble", "Fonkin", "Gimble", "Glim", "Gerbo", "Jebeddo", "Namfoodle", "Roondar", "Seebo", "Zook"]
+    MALE_NAME = ["Sonny", "Bobby", "Dipple", "Zeph", "Snaps", "Boddynock", "Dimble", "Fonkin", "Gimble", "Glim", "Gerbo", "Jebeddo", "Namfoodle", "Roondar", "Seebo", "Zook"]
 
-    FEMALE_NAME = ["Bimpnottin", "Caramip", "Duvamil", "Ellywick", "Ellyjobell", "Loopmottin", "Mardnab", "Roywyn", "Shamil", "Waywocket"]
+    FEMALE_NAME = ["Tulla", "Posy", "Tinks", "Zippie", "Moonie", "Nexie", "Polly", "Lizalie", "Bimpnottin", "Caramip", "Duvamil", "Ellywick", "Ellyjobell", "Loopmottin", "Mardnab", "Roywyn", "Shamil", "Waywocket"]
 
-    CLAN_NAME = ["Beren", "Daergel", "Folkor", "Garrick", "Nackle", "Murnig", "Ningel", "Raulnor", "Scheppen", "Turen"]
+    CLAN_NAME = ["Fizzlebang","Jinxwizzle", "Grimboodle", "Boddyhop", "Nimbledigit", "Nickleplenty", "Beren", "Daergel", "Folkor", "Garrick", "Nackle", "Murnig", "Ningel", "Raulnor", "Scheppen", "Turen"]
 
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    3' 0"       +2d4            40 lb.      x 1 lb.
