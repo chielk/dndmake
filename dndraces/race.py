@@ -1,7 +1,9 @@
 from simpleunit import Length, Weight
 from dice import roll, E
 from .helper import sample, normal, normal_as_range
-from numpy.random import randint, choice
+from numpy.random import randint
+import numpy
+import random
 
 
 class Race:
@@ -30,6 +32,8 @@ class Race:
     HAIR = {"black": 1}
 
     EYES = {"brown": 1}
+
+    NAME = {"Your Character":1}
 
     VALUES = {"open": {("inventive and curious", 2): 1,
                        ("curious", 1): 1,
@@ -97,17 +101,17 @@ class Race:
         self.eyes = sample(self.EYES)
 
         # Output
-        if name:
-            self.name = name
-        else:
-            self.name = "Your character"
 
         self.make_height_weight(gender=gender, height=height, weight=weight)
         self.make_personality(alignment=alignment)
+        if name:
+            self.name = name
+        else:
+            self.make_name()
 
     def make_height_weight(self, gender=None, height=None, weight=None):
         """Generate a height and weight given a race and gender."""
-        gender = self.make_gender(gender)
+        self.make_gender(gender)
 
         if height == "tall":
             H_MOD = (roll(self.H_MOD) + 2 * E(self.H_MOD)) / 3
@@ -123,9 +127,9 @@ class Race:
         else:
             W_MOD = roll(self.W_MOD)
 
-        H_BASE = Length.parse(gender.H_BASE)
+        H_BASE = Length.parse(self.gender.H_BASE)
         H_UNIT = Length.parse(self.H_UNIT)
-        W_BASE = Weight.parse(gender.W_BASE)
+        W_BASE = Weight.parse(self.gender.W_BASE)
 
         self.height = H_BASE + H_UNIT * H_MOD
         self.weight = W_BASE + Weight(**{self.W_UNIT: W_MOD}) * H_MOD
@@ -195,9 +199,10 @@ class Race:
         elif gender == "female":
             self.gender = self.Female
         else:
-            self.gender = choice(self.GENDERS)
-
-        return self.gender
+            self.gender = random.choice(self.GENDERS)
+    
+    def make_name(self):
+        self.name = "Boring McBasic"
 
     def __str__(self):
         pronoun = "he" if self.gender.__name__ == self.Male.__name__ else "she"

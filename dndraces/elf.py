@@ -1,5 +1,5 @@
 from dndraces import Race
-
+import random
 
 class Elf(Race):
     NAME = "elf"
@@ -23,7 +23,12 @@ class Elf(Race):
             "red": 1,
             "violet": 1,
             }
+            
+    MALE_NAME = ["Aramil", "Aust", "Enialis", "Heian", "Himo", "Ivellios", "Lau-cian", "Quarion", "Soverliss", "Thamior", "Tharivol"] 
 
+    FEMALE_NAME = ["Anastrianna", "Antinua", "Drusilia", "Felosial", "Ielenia", "Lia", "Mialee", "Qillathe", "Silaqui", "Vadania", "Valanthe", "Xanaphia"]
+
+    FAMILY_NAME = ["Amastacia (Starflower)", "Amakiir (Gemflower)", "Galanodel (Moonwhisper)", "Holimion (Diamonddew)", "Liadon (Silverfrond)", "Meliamne (Oak-enheel)", "Naïlo (Nightbreeze)", "Siannodel (Moonbrook)", "Ilphukiir (Gemblossom)", "Xiloscient (Goldpetal)"]
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    4' 5"       +2d6            85 lb.      x (1d6) lb.
     # Female  4' 5"       +2d6            80 lb.      x (1d6) lb.
@@ -41,3 +46,11 @@ class Elf(Race):
     class Female(Race.Female):
         H_BASE = "4'5\""
         W_BASE = "80lbs"
+
+    def make_name(self):
+        if self.gender.NAME == "male":
+            first_name = random.choice(self.MALE_NAME)
+        else: 
+            first_name = random.choice(self.FEMALE_NAME)
+        family_name = random.choice(self.FAMILY_NAME)
+        self.name = first_name + " " + family_name

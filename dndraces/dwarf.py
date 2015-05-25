@@ -1,4 +1,5 @@
 from dndraces import Race
+import random
 
 
 class Dwarf(Race):
@@ -24,6 +25,12 @@ class Dwarf(Race):
             "violet": 1,
             }
 
+    MALE_NAME = ["Barendd", "Brottor", "Eberk", "Einkil", "Oskar", "Rurik", "Taklinn", "Torderk", "Traubon", "Ulfgar", "Veit"]
+
+    FEMALE_NAME = ["Artin", "Audhild", "Dagnal", "Diesa", "Gunnloda", "Hlin", "Ilde", "Liftrasa", "Sannl", "Torgga"]
+
+    CLAN_NAME = ["Balderk", "Dankil", "Gorunn", "Holderhek", "Loderr", "Lutgehr", "Rumnaheim", "Strakeln", "Torunn", "Ungart"]
+
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    3' 9"       +2d4            130 lb.     x (2d6) lb.
     # Female  3' 7"       +2d4            100 lb.     x (2d6) lb.
@@ -41,3 +48,11 @@ class Dwarf(Race):
     class Female(Race.Female):
         H_BASE = "3'7\""
         W_BASE = "100lbs"
+
+    def make_name(self):
+        if self.gender.NAME == "male":
+            first_name = random.choice(self.MALE_NAME)
+        else: 
+            first_name = random.choice(self.FEMALE_NAME)
+        clan_name = random.choice(self.CLAN_NAME)
+        self.name = first_name + " " + clan_name

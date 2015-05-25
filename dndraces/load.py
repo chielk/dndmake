@@ -1,4 +1,4 @@
-from importlib.machinery import SourceFileLoader
+import importlib
 import re
 import sys
 import os
@@ -35,14 +35,14 @@ def load_race(name):
         sys.dont_write_bytecode = True
         try:
             # from $HOME
-            loader = SourceFileLoader(class_name,
+            loader = importlib.machinery.SourceFileLoader(class_name,
                                       os.path.join(HOME_RACES, file_name))
             races = loader.load_module()
             Race = getattr(races, class_name)
         except FileNotFoundError:
             try:
                 # from /etc
-                loader = SourceFileLoader(class_name,
+                loader = importlib.machinery.SourceFileLoader(class_name,
                                           os.path.join(ETC_RACES, file_name))
                 races = loader.load_module()
                 Race = getattr(races, class_name)

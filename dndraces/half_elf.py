@@ -1,6 +1,5 @@
-
-from dndraces import Race
-
+from dndraces import Race, Human, Elf
+import random
 
 class HalfElf(Race):
     NAME = "half-elf"
@@ -25,6 +24,13 @@ class HalfElf(Race):
             "violet": 1,
             }
 
+    MALE_NAME = Human.MALE_NAME + Elf.MALE_NAME
+
+    FEMALE_NAME = Human.FEMALE_NAME + Elf.FEMALE_NAME
+
+    FAMILY_NAME = Human.FAMILY_NAME + Elf.FAMILY_NAME
+
+
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    4' 7"       +2d8            100 lb.     x (2d4) lb.
     # Female  4' 5"       +2d8            80 lb.      x (2d4) lb.
@@ -42,3 +48,11 @@ class HalfElf(Race):
     class Female(Race.Female):
         H_BASE = "4'5\""
         W_BASE = "80lbs"
+
+    def make_name(self):
+        if self.gender.NAME == "male":
+            first_name = random.choice(self.MALE_NAME)
+        else: 
+            first_name = random.choice(self.FEMALE_NAME)
+        family_name = random.choice(self.FAMILY_NAME)
+        self.name = first_name + " " + family_name

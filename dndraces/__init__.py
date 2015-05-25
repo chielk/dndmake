@@ -4,5 +4,7 @@ from .elf import Elf
 from .dwarf import Dwarf
 from .gnome import Gnome
 from .half_elf import HalfElf
+from .half_orc import HalfOrc
+from .halfling import Halfling
 from .load import load_race
 from .load import list_races
