@@ -33,7 +33,7 @@ class Race:
 
     EYES = {"brown": 1}
 
-    NAME = {"Your Character":1}
+    NAME = {"Your Character": 1}
 
     VALUES = {"open": {("inventive and curious", 2): 1,
                        ("curious", 1): 1,
@@ -200,9 +200,9 @@ class Race:
             self.gender = self.Female
         else:
             self.gender = random.choice(self.GENDERS)
-    
+
     def make_name(self):
-        self.name = "Boring McBasic"
+        self.name = "Your Character"
 
     def __str__(self):
         pronoun = "he" if self.gender.__name__ == self.Male.__name__ else "she"

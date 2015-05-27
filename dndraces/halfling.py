@@ -1,6 +1,7 @@
 from dndraces import Race
 import random
 
+
 class Halfling(Race):
     NAME = "halfling"
     LAWFULNESS = (0, .5)  # mu, sigma
@@ -24,11 +25,40 @@ class Halfling(Race):
             "violet": 1,
             }
 
-    MALE_NAME = ["Alton", "Beau", "Cade", "Eldon", "Garret", "Lyle", "Milo", "Osborn", "Roscoe", "Wellby"]
+    MALE_NAME = ["Alton",
+                 "Beau",
+                 "Cade",
+                 "Eldon",
+                 "Garret",
+                 "Lyle",
+                 "Milo",
+                 "Osborn",
+                 "Roscoe",
+                 "Wellby"]
 
-    FEMALE_NAME = ["Amaryllis", "Charmaine", "Cora", "Euphemia", "Jillian", "Lavinia", "Lidda", "Merla", "Portia", "Seraphina", "Verna"]
+    FEMALE_NAME = ["Amaryllis",
+                   "Charmaine",
+                   "Cora",
+                   "Euphemia",
+                   "Jillian",
+                   "Lavinia",
+                   "Lidda",
+                   "Merla",
+                   "Portia",
+                   "Seraphina",
+                   "Verna"]
 
-    FAMILY_NAME = ["Brushgather", "Goodbarrel", "Greenbottle", "Highhill", "Hilltopple", "Leagallow", "Tealeaf", "Thorngage", "Tosscobble", "Underbough"]
+    FAMILY_NAME = ["Brushgather",
+                   "Goodbarrel",
+                   "Greenbottle",
+                   "Highhill",
+                   "Hilltopple",
+                   "Leagallow",
+                   "Tealeaf",
+                   "Thorngage",
+                   "Tosscobble",
+                   "Underbough"]
+
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    2' 8"       +2d4            30 lb.      x 1 lb.
     # Female  2' 6"       +2d4            25 lb.      x 1 lb.
@@ -50,7 +80,7 @@ class Halfling(Race):
     def make_name(self):
         if self.gender.NAME == "male":
             first_name = random.choice(self.MALE_NAME)
-        else: 
+        else:
             first_name = random.choice(self.FEMALE_NAME)
         family_name = random.choice(self.FAMILY_NAME)
         self.name = first_name + " " + family_name

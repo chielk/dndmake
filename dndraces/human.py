@@ -1,6 +1,7 @@
 from dndraces import Race
 import random
 
+
 class Human(Race):
     NAME = "human"
 
@@ -25,11 +26,64 @@ class Human(Race):
             "violet": 1,
             }
 
-    MALE_NAME = ["Adam", "Geoffrey", "Gilbert", "Henry", "Hugh", "John", "Nicholas", "Peter", "Ralph", "Richard", "Robert", "Roger", "Simon", "Thomas", "Walter", "William"]
+    MALE_NAME = ["Adam",
+                 "Geoffrey",
+                 "Gilbert",
+                 "Henry",
+                 "Hugh",
+                 "John",
+                 "Nicholas",
+                 "Peter",
+                 "Ralph",
+                 "Richard",
+                 "Robert",
+                 "Roger",
+                 "Simon",
+                 "Thomas",
+                 "Walter",
+                 "William"]
 
-    FEMALE_NAME = ["Ada", "Agnes", "Alice", "Avice", "Beatrice", "Cecily", "Elwisia", "Emma", "Emelyn", "Gisella", "Isabella", "Joan", "Juliana", "Margery", "Matilda", "Molly", "Rosa", "Yvette"]
+    FEMALE_NAME = ["Ada",
+                   "Agnes",
+                   "Alice",
+                   "Avice",
+                   "Beatrice",
+                   "Cecily",
+                   "Elwisia",
+                   "Emma",
+                   "Emelyn",
+                   "Gisella",
+                   "Isabella",
+                   "Joan",
+                   "Juliana",
+                   "Margery",
+                   "Matilda",
+                   "Molly",
+                   "Rosa",
+                   "Yvette"]
 
-    FAMILY_NAME = ["Ashdown", "Abbott", "Barrett", "Baker", "Bradford", "Chance", "Cross", "Eaton", "Fletcher", "Forest", "Garrett", "Gladwyn", "Greene", "Grey", "James", "Lynton", "Moore", "Payne", "Penny", "Quick", "Ward", "Webb"]
+    FAMILY_NAME = ["Ashdown",
+                   "Abbott",
+                   "Barrett",
+                   "Baker",
+                   "Bradford",
+                   "Chance",
+                   "Cross",
+                   "Eaton",
+                   "Fletcher",
+                   "Forest",
+                   "Garrett",
+                   "Gladwyn",
+                   "Greene",
+                   "Grey",
+                   "James",
+                   "Lynton",
+                   "Moore",
+                   "Payne",
+                   "Penny",
+                   "Quick",
+                   "Ward",
+                   "Webb"]
 
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    4' 10"      +2d10           120 lb.     x (2d4) lb.
@@ -52,7 +106,7 @@ class Human(Race):
     def make_name(self):
         if self.gender.NAME == "male":
             first_name = random.choice(self.MALE_NAME)
-        else: 
+        else:
             first_name = random.choice(self.FEMALE_NAME)
         family_name = random.choice(self.FAMILY_NAME)
         self.name = first_name + " " + family_name

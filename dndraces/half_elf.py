@@ -1,6 +1,7 @@
 from dndraces import Race, Human, Elf
 import random
 
+
 class HalfElf(Race):
     NAME = "half-elf"
     LAWFULNESS = (-2, 1)  # mu, sigma
@@ -30,7 +31,6 @@ class HalfElf(Race):
 
     FAMILY_NAME = Human.FAMILY_NAME + Elf.FAMILY_NAME
 
-
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    4' 7"       +2d8            100 lb.     x (2d4) lb.
     # Female  4' 5"       +2d8            80 lb.      x (2d4) lb.
@@ -52,7 +52,7 @@ class HalfElf(Race):
     def make_name(self):
         if self.gender.NAME == "male":
             first_name = random.choice(self.MALE_NAME)
-        else: 
+        else:
             first_name = random.choice(self.FEMALE_NAME)
         family_name = random.choice(self.FAMILY_NAME)
         self.name = first_name + " " + family_name

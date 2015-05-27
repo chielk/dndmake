@@ -4,6 +4,7 @@ import re
 from urllib.request import urlopen
 from html.parser import HTMLParser
 
+
 class Size(object):
     """Representation of size categories and their modifiers."""
 

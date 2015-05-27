@@ -1,6 +1,7 @@
 from dndraces import Race
 import random
 
+
 class HalfOrc(Race):
     NAME = "half-orc"
 
@@ -25,9 +26,28 @@ class HalfOrc(Race):
             "violet": 1,
             }
 
-    MALE_NAME = ["Dench", "Feng", "Gell", "Henk", "Holg", "Imsh", "Keth", "Krusk", "Ront", "Shump", "Thokk"]
-    
-    FEMALE_NAME = ["Baggi", "Emen", "Engong", "Myev", "Neega", "Ovak", "Ownka", "Shautha", "Vola", "Volen"]
+    MALE_NAME = ["Dench",
+                 "Feng",
+                 "Gell",
+                 "Henk",
+                 "Holg",
+                 "Imsh",
+                 "Keth",
+                 "Krusk",
+                 "Ront",
+                 "Shump",
+                 "Thokk"]
+
+    FEMALE_NAME = ["Baggi",
+                   "Emen",
+                   "Engong",
+                   "Myev",
+                   "Neega",
+                   "Ovak",
+                   "Ownka",
+                   "Shautha",
+                   "Vola",
+                   "Volen"]
 
     # Gender  Base Height Height Modifier Base Weight Weight Modifier
     # Male    4' 10"      +2d12           150 lb.     x (2d6) lb.
@@ -50,5 +70,5 @@ class HalfOrc(Race):
     def make_name(self):
         if self.gender.NAME == "male":
             self.name = random.choice(self.MALE_NAME)
-        else: 
+        else:
             self.name = random.choice(self.FEMALE_NAME)
