@@ -102,8 +102,6 @@ class Dice(Element):
 
     def __expectancy__(self):
         expectancy = self._number * (self._sides + 1) / 2
-        if expectancy.is_integer():
-            expectancy = int(expectancy)  # Omit floating point
         return self._sign * expectancy
 
     def __repr__(self):
@@ -153,8 +151,8 @@ class DiceExpression:
     def __expectancy__(self):
         """Return an iterable of expectancy values of each AST."""
         expectancy = sum(d.__expectancy__() for d in self._asts)
-        #if expectancy.is_integer():
-        #    expectancy = int(expectancy)  # Omit floating point
+        if type(expectancy) == float and expectancy.is_integer():
+            expectancy = int(expectancy)  # Omit floating point
         return expectancy
 
     def __repr__(self):
