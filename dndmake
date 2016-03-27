@@ -4,6 +4,8 @@
 # http://en.wikipedia.org/wiki/Big_Five_personality_traits
 # (c) Chiel Kooijman 2014
 
+DNDMAKE_VERSION = "0.1"
+
 """
 Openness to experience: (inventive/curious vs. consistent/cautious).
 Appreciation for art, emotion, adventure, unusual ideas, curiosity, and variety
@@ -69,13 +71,15 @@ def parse_arguments():
     weight.add_argument("-l", "--light", action="store_const", const="light",
                         dest="weight", help="Make a light character")
 
-    parser.add_argument("race", choices=dndraces.list_races(),
-                        help="e.g. human, elf")
+    parser.add_argument("race", default='human', choices=dndraces.list_races(),
+                        nargs='?', help="e.g. human, elf")
 
     parser.add_argument("alignment", choices=dndraces.Race.ALIGNMENTS,
                         nargs="?", default=None,
                         help="Lawfulness and goodness: [LNC][GNE]")
     parser.add_argument("-n", "--name", help="Character name")
+    parser.add_argument("-v", "--version", action='store_true',
+                        help="Print version")
     args = parser.parse_args()
 
     if args.alignment and args.alignment not in dndraces.Race.ALIGNMENTS:
@@ -89,6 +93,9 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
+    if args.version:
+        print('dndmake {}'.format(DNDMAKE_VERSION))
+        sys.exit(0)
     try:
         Race = dndraces.load_race(args.race)
     except FileNotFoundError:
