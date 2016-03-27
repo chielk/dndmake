@@ -1,0 +1,35 @@
+#compdef dndmake
+typeset -A opt_args
+
+
+races=$(ls /etc/dndmake/races/)
+if [[ -d ~/.dndtools/races ]]; then
+	races+="\n$(ls ~/.dndmake/races/)"
+fi
+races=$(echo $races | sed s/_/-/g | sed s/.py//g | sort | uniq)
+
+alignments=('LG' 'LN' 'LE' 'NG' 'NN' 'NE' 'CG' 'CN' 'CE')
+
+local curcontext="$curcontext" state line _gems _opts ret=1
+
+_arguments \
+	'(--help)-h[Show this help message and exit]'\
+	'(-h)--help[show this help message and exit]'\
+	'(--version)-v[Print version and exit]'\
+	'(-v)--version[Print version and exit]'\
+	'(-f --female --male)-m[Make a male character]'\
+	'(-f --female -m)--male[Make a male character]'\
+	'(-m --male --female)-f[Make a female character]'\
+	'(-m --male -f)--female[Make a female character]'\
+	'(-s --short --tall)-t[Make a tall character]'\
+	'(-s --short -t)--tall[Make a tall character]'\
+	'(-t --tall --short)-s[Make a short character]'\
+	'(-t --tall -s)--short[Make a short character]'\
+	'(-l --light --heavy)-b[Make a heavy character]'\
+	'(-l --light -b)--heavy[Make a heavy character]'\
+	'(-b --heavy --light)-l[Make a light character]'\
+	'(-b --heavy -l)--light[Make a light character]'\
+	'(--name)-n[Character name]'\
+	'(-n)--name[Character name]'\
+	'1::(races)'\
+	'2::(alignments)' && ret=0
