@@ -2,7 +2,6 @@
 from setuptools import setup
 import sys
 
-
 if sys.version_info.major < 3:
     sys.stderr.write("Please use Python version 3\n")
     sys.exit(1)
@@ -15,8 +14,7 @@ setup(name='dndmake',
       license="GPLv3",
       url="https://github.com/chielk/dndmake",
       scripts=["dndmake", "roll", "dndwildshape"],
-      include_package_data=True,
-      packages=["dndraces"],
+      packages=["dndraces", "dndhelper"],
       data_files=[('/etc/bash_completion.d', ['extras/dndmake']),
                   ('/usr/local/share/zsh/site-functions', ['extras/_dndmake']),
                   ('/usr/local/share/man/man1', ['extras/dndmake.1']),

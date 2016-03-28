@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # (c) Chiel Kooijman 2014
-from dice import roll, E, min_val, max_val, DiceExpression
+from dndhelper.dice import roll, E, min_val, max_val, DiceExpression
 
 
 if __name__ == "__main__":

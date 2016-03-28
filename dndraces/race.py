@@ -1,5 +1,5 @@
-from simpleunit import Length, Weight
-from dice import roll, E
+from dndhelper.simpleunit import Length, Weight
+from dndhelper.dice import roll, E
 from .helper import sample, normal, normal_as_range
 from numpy.random import randint
 import numpy

@@ -3,7 +3,7 @@
 import argparse
 import csv
 import logging
-from character import Character, Speed, Size, character_from_url
+from dndhelper.character import Character, Speed, Size, character_from_url
 
 
 def parse_animals(animaldb_file):
