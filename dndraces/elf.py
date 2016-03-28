@@ -55,7 +55,7 @@ class Elf(Race):
                    "Galanodel (Moonwhisper)",
                    "Holimion (Diamonddew)",
                    "Liadon (Silverfrond)",
-                   "Meliamne (Oak-enheel)",
+                   "Meliamne (Oakenheel)",
                    "Naïlo (Nightbreeze)",
                    "Siannodel (Moonbrook)",
                    "Ilphukiir (Gemblossom)",
