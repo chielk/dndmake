@@ -1,12 +1,10 @@
 #compdef dndmake
-typeset -A opt_args
 
-
-races=$(ls /etc/dndmake/races/)
-if [[ -d ~/.dndtools/races ]]; then
-	races+="\n$(ls ~/.dndmake/races/)"
+races=(/etc/dndmake/races/*(:t:r:gs/_/-/))  # Default races
+if [[ -d ~/.dndmake/races ]]; then          # Custom races
+	races=($races ~/.dndmake/races/*(:t:r:gs/_/-/))
 fi
-races=$(echo $races | sed s/_/-/g | sed s/.py//g | sort | uniq)
+races=(${(u)races[@]})                      # make unique
 
 alignments=('LG' 'LN' 'LE' 'NG' 'NN' 'NE' 'CG' 'CN' 'CE')
 
@@ -31,5 +29,5 @@ _arguments \
 	'(-b --heavy -l)--light[Make a light character]'\
 	'(--name)-n[Character name]'\
 	'(-n)--name[Character name]'\
-	'1::(races)'\
-	'2::(alignments)' && ret=0
+	'1:race:($races)'\
+	'2:alignment:($alignments)' && ret=0
