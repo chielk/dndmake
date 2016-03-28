@@ -1,5 +1,8 @@
 #compdef dndmake
 
+typeset -A opt_args
+local races alignments
+
 races=(/etc/dndmake/races/*(:t:r:gs/_/-/))  # Default races
 if [[ -d ~/.dndmake/races ]]; then          # Custom races
 	races=($races ~/.dndmake/races/*(:t:r:gs/_/-/))
@@ -8,7 +11,6 @@ races=(${(u)races[@]})                      # make unique
 
 alignments=('LG' 'LN' 'LE' 'NG' 'NN' 'NE' 'CG' 'CN' 'CE')
 
-local curcontext="$curcontext" state line _gems _opts ret=1
 
 _arguments \
 	'(--help)-h[Show this help message and exit]'\
@@ -29,5 +31,5 @@ _arguments \
 	'(-b --heavy -l)--light[Make a light character]'\
 	'(--name)-n[Character name]'\
 	'(-n)--name[Character name]'\
-	'1:race:($races)'\
-	'2:alignment:($alignments)' && ret=0
+	':race:($races)'\
+	'::alignment:($alignments)' && ret=0
