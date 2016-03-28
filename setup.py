@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from distutils.core import setup
+from setuptools import setup
 import sys
 
 
@@ -15,7 +15,7 @@ setup(name='dndmake',
       license="GPLv3",
       url="https://github.com/chielk/dndmake",
       scripts=["dndmake", "roll", "dndwildshape"],
-      py_modules=["simpleunit", "dice", "character"],
+      include_package_data=True,
       packages=["dndraces"],
       data_files=[('/etc/bash_completion.d', ['extras/dndmake']),
                   ('/usr/local/share/zsh/site-functions', ['extras/_dndmake']),
@@ -27,5 +27,5 @@ setup(name='dndmake',
                                           'dndraces/half_orc.py',
                                           'dndraces/halfling.py',
                                           'dndraces/dwarf.py'])],
-      requires=["argparse (>=1.0)", "numpy (>=1.8.2)"],
+      install_requires=["argparse>=1.0", "numpy>=1.8.2", "pyperclip>=1.3"],
       )

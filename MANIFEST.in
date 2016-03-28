@@ -1,8 +1,0 @@
-include README.md
-include dndmake
-include dndwildshape
-include character
-include species
-include simpleunit
-include roll
-include setup.py

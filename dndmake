@@ -40,6 +40,10 @@ import argparse
 import sys
 import os
 import dndraces
+try:
+    import pyperclip
+except ImportError:
+    pyperclip = None
 
 
 def parse_arguments():
@@ -104,4 +108,7 @@ if __name__ == "__main__":
 
     character = Race(name=args.name, gender=args.gender, height=args.height,
                      weight=args.weight, alignment=args.alignment)
+    if pyperclip:
+        pyperclip.copy(character.__str__())
+
     print(character)
