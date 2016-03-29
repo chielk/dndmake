@@ -61,7 +61,7 @@ def parse_args():
                                     'profiler/view_char.php?cid=75945',
                             help="The URL of the sheet to scrape.")
     arg_parser.add_argument('-f', '--output-file',
-                            help="Write output to file, for easy future"
+                            help="Write output to file, for easy future "
                                  "lookup.")
     return arg_parser.parse_args()
 

@@ -697,7 +697,7 @@ class CharacterSheetParser(HTMLParser):
 def character_from_url(url):
     logging.info("Downloading character sheet for analysis.")
     req = urlopen(url)
-    html = (b'').join(req.readlines()).decode()
+    html = str(req.read())
     character = Character()
     parser = CharacterSheetParser()
     parser.set_character(character)
