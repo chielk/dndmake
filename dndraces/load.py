@@ -4,7 +4,7 @@ import sys
 import os
 
 HOME = os.getenv("HOME")
-HOME_RACES = os.path.join(HOME, ".dndmake", "races")
+HOME_RACES = os.path.join(HOME, ".config", "dndmake", "races")
 ETC_RACES = "/etc/dndmake/races"
 
 

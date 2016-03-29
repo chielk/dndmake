@@ -3,7 +3,8 @@
 import argparse
 import csv
 import logging
-from dndhelper.character import Character, Speed, Size, character_from_url
+from dndhelper.character import (Character, Speed, Size, character_from_url,
+                                 create_config, load_config, list_characters)
 
 
 def parse_animals(animaldb_file):
@@ -57,12 +58,16 @@ def parse_args():
     arg_parser.add_argument('-a', '--animals', default="animaldb.csv",
                             help="The tab-separated file with animal data.")
     arg_parser.add_argument('url', nargs='?',
-                            default=r'http://www.thetangledweb.net/forums/'
+                            default='http://www.thetangledweb.net/forums/'
                                     'profiler/view_char.php?cid=75945',
                             help="The URL of the sheet to scrape.")
     arg_parser.add_argument('-f', '--output-file',
                             help="Write output to file, for easy future "
                                  "lookup.")
+    arg_parser.add_argument('-c', '--character', default=None,
+                            help="Character to use.")
+    arg_parser.add_argument('-l', '--list', default=None, action='store_true',
+                            help="List the known characters.")
     return arg_parser.parse_args()
 
 
@@ -77,7 +82,13 @@ def wildshape_sort_key(key):
 
 def main():
     args = parse_args()
-    character = character_from_url(args.url)
+    if args.list:
+        list_characters()
+    if not args.url:
+        char_dict = load_config(args.character)
+    else:
+        char_dict = {'tw_url': args.url}
+    character = character_from_url(char_dict)
     animals = parse_animals(args.animals)
     wildshapes = []
     exs = set()

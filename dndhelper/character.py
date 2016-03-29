@@ -3,6 +3,92 @@ import numpy
 import re
 from urllib.request import urlopen
 from html.parser import HTMLParser
+import configparser
+import os
+import sys
+
+ETC_CONFIG = "/etc/dndmake/config"
+HOME = os.getenv("HOME")
+HOME_CONFIG = os.path.join(HOME, ".config", "dndmake", "config")
+TW_URL = "http://www.thetangledweb.net/forums/profiler/view_char.php?cid={}"
+DW_URL = "http://www.myth-weavers.com/api/v1/sheets/sheets/{}"
+
+
+def list_characters():
+    config = configparser.ConfigParser()
+    config.read(HOME_CONFIG)
+    for key, char_dict in config.items():
+        if key == 'DEFAULT':
+            continue
+        if 'tw_id' in char_dict:
+            site = 'The Tangled Web'
+        elif 'dw_id' in char_dict:
+            site = 'Myth Weavers'
+        print("{0:<30}-- {1}, {2}".format(key, char_dict['full_name'], site))
+    sys.exit(0)
+
+
+def create_config():
+    """Create a new config file in the user's home directory."""
+    print("No character profile found. Creating config.")
+    config = configparser.ConfigParser()
+
+    full_name = input("Character name: ")
+    first_name = full_name.split()[0].lower()
+    url = input("Online character sheet url: ")
+
+    config['DEFAULT'] = {'character': first_name}
+    config[first_name] = {'full_name': full_name}
+
+    if 'www.thetangledweb.net' in url:
+        try:
+            tw_id = re.search(r"\?cid=(\d+)", url).groups()[0]
+            config[first_name]['tw_id'] = tw_id
+        except AttributeError:
+            sys.stderr.write("Can not read url. Quiting.\n")
+            sys.exit(1)
+    elif 'www.myth-weavers.com' in url:
+        try:
+            mw_id = re.search(r"\#id=(\d+)", url).groups()[0]
+            config[first_name]['mw_id'] = tw_id
+        except AttributeError:
+            sys.stderr.write("Can not read url. Quiting.\n")
+            sys.exit(1)
+    else:
+        sys.stderr.write("Currently only sheets from " +
+                         "http://www.thetangledweb.net are supported.\n")
+        sys.exit(1)
+
+    print("Config has been saved to {}.".format(HOME_CONFIG))
+
+    with open(HOME_CONFIG, "w") as config_f:
+        config.write(config_f)
+
+
+def load_config(char_name=None):
+    """Load a character from the config file."""
+    config = configparser.ConfigParser()
+
+    # Create user config if it doesn't exist yet
+    if not os.path.isfile(HOME_CONFIG):
+        create_config()
+
+    config.read(HOME_CONFIG)
+
+    if char_name:
+        char_dict = config[char_name]
+    else:
+        first_name = config['DEFAULT']['first_name']
+        char_dict = config[first_name]
+
+    # Turn IDs into urls
+    if 'tw_id' in char_dict:
+        char_dict['tw_url'] = TW_URL.format(char_dict['tw_id'])
+    if 'dw_id' in char_dict:
+        char_dict['dw_url'] = TW_URL.format(char_dict['dw_id'])
+
+    return char_dict
+
 
 
 class Size(object):
@@ -679,7 +765,7 @@ Loads,4: L: {2[0]}, M: {2[1]}, H: {2[2]}
                                         self.carrying[1])
 
 
-class CharacterSheetParser(HTMLParser):
+class TwCharacterSheetParser(HTMLParser):
     """Parse a sheet of TheTangledWeb.net and make it a Character."""
     def set_character(self, character):
         self._character = character
@@ -694,12 +780,13 @@ class CharacterSheetParser(HTMLParser):
             self._character.set_field(id_, value)
 
 
-def character_from_url(url):
-    logging.info("Downloading character sheet for analysis.")
-    req = urlopen(url)
-    html = str(req.read())
-    character = Character()
-    parser = CharacterSheetParser()
-    parser.set_character(character)
-    parser.feed(html)
-    return character
+def character_from_url(char_dict):
+    if 'tw_id' in char_dict:
+        logging.info("Downloading character sheet for analysis.")
+        req = urlopen(char_dict['tw_url'])
+        html = str(req.read())
+        character = Character()
+        parser = TwCharacterSheetParser()
+        parser.set_character(character)
+        parser.feed(html)
+        return character
