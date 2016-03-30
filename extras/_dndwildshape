@@ -23,8 +23,8 @@ _arguments \
 	'(-x)--ex+[EX]:Only show results that have this extraordinary special attack::'\
 	'(--animals)-a+:The tab-separated file with animal data:_files'\
 	'(-a)--animals+:The tab-separated file with animal data:_files'\
-	'(--output-file)-o+:The tab-separated file with animal data:_files'\
-	'(-a)--animals+:The tab-separated file with animal data:_files'\
+	'(--output-file)-f+:The tab-separated file with animal data:_files'\
+	'(-f)--output-file+:The tab-separated file with animal data:_files'\
 	'(--character)-c+:The tab-separated file with animal data::'\
 	'(-c)--character+:The tab-separated file with animal data::'\
 	'(--order)-o+:Sort results based on some attribute:($attributes)'\
