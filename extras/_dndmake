@@ -13,23 +13,24 @@ alignments=('LG' 'LN' 'LE' 'NG' 'NN' 'NE' 'CG' 'CN' 'CE')
 
 
 _arguments \
-	'(--help)-h[Show this help message and exit]'\
+	'(--help)-h[show this help message and exit]'\
 	'(-h)--help[show this help message and exit]'\
-	'(--version)-v[Print version and exit]'\
-	'(-v)--version[Print version and exit]'\
-	'(-f --female --male)-m[Make a male character]'\
-	'(-f --female -m)--male[Make a male character]'\
-	'(-m --male --female)-f[Make a female character]'\
-	'(-m --male -f)--female[Make a female character]'\
-	'(-s --short --tall)-t[Make a tall character]'\
-	'(-s --short -t)--tall[Make a tall character]'\
-	'(-t --tall --short)-s[Make a short character]'\
-	'(-t --tall -s)--short[Make a short character]'\
-	'(-l --light --heavy)-b[Make a heavy character]'\
-	'(-l --light -b)--heavy[Make a heavy character]'\
-	'(-b --heavy --light)-l[Make a light character]'\
-	'(-b --heavy -l)--light[Make a light character]'\
-	'(--name)-n[Character name]'\
-	'(-n)--name[Character name]'\
-	':race:($races)'\
-	'::alignment:($alignments)' && ret=0
+	'(--version)-v[print version and exit]'\
+	'(-v)--version[print version and exit]'\
+	'(-f --female --male)-m[make a male character]'\
+	'(-f --female -m)--male[make a male character]'\
+	'(-m --male --female)-f[make a female character]'\
+	'(-m --male -f)--female[make a female character]'\
+	'(-s --short --tall)-t[make a tall character]'\
+	'(-s --short -t)--tall[make a tall character]'\
+	'(-t --tall --short)-s[make a short character]'\
+	'(-t --tall -s)--short[make a short character]'\
+	'(-l --light --heavy)-b[make a heavy character]'\
+	'(-l --light -b)--heavy[make a heavy character]'\
+	'(-b --heavy --light)-l[make a light character]'\
+	'(-b --heavy -l)--light[make a light character]'\
+	'(--name)-n[character name]'\
+	'(-n)--name[character name]'\
+	'(-a)--alignment:alignment:($alignments)'\
+	'(--alignment)-a:alignment:($alignments)'\
+	':race:($races)'&& ret=0

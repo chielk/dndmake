@@ -6,39 +6,10 @@
 
 DNDMAKE_VERSION = "0.1"
 
-"""
-Openness to experience: (inventive/curious vs. consistent/cautious).
-Appreciation for art, emotion, adventure, unusual ideas, curiosity, and variety
-of experience. Openness reflects the degree of intellectual curiosity,
-creativity and a preference for novelty and variety a person has. It is also
-described as the extent to which a person is imaginative or independent, and
-depicts a personal preference for a variety of activities over a strict
-routine. Some disagreement remains about how to interpret the openness factor,
-which is sometimes called "intellect" rather than openness to experience.
-
-Conscientiousness: (efficient/organized vs. easy-going/careless). A tendency to
-be organized and dependable, show self-discipline, act dutifully, aim for
-achievement, and prefer planned rather than spontaneous behavior.
-
-Extraversion: (outgoing/energetic vs. solitary/reserved). Energy, positive
-emotions, surgency, assertiveness, sociability and the tendency to seek
-stimulation in the company of others, and talkativeness.
-
-Agreeableness: (friendly/compassionate vs. analytical/detached). A tendency to
-be compassionate and cooperative rather than suspicious and antagonistic
-towards others. It is also a measure of one's trusting and helpful nature, and
-whether a person is generally well tempered or not.
-
-Neuroticism: (sensitive/nervous vs. secure/confident). The tendency to
-experience unpleasant emotions easily, such as anger, anxiety, depression, and
-vulnerability. Neuroticism also refers to the degree of emotional stability and
-impulse control and is sometimes referred to by its low pole, "emotional
-stability".
-"""
-
 import argparse
 import sys
 import os
+import random
 import dndraces
 try:
     import pyperclip
@@ -75,22 +46,19 @@ def parse_arguments():
     weight.add_argument("-l", "--light", action="store_const", const="light",
                         dest="weight", help="Make a light character")
 
-    parser.add_argument("race", default='human', choices=dndraces.list_races(),
+    parser.add_argument("race", default=None, choices=dndraces.list_races(),
                         nargs='?', help="e.g. human, elf")
 
-    parser.add_argument("alignment", choices=dndraces.Race.ALIGNMENTS,
-                        nargs="?", default=None,
+    parser.add_argument("-a", "--alignment", choices=dndraces.Race.ALIGNMENTS,
+                        default=None,
                         help="Lawfulness and goodness: [LNC][GNE]")
     parser.add_argument("-n", "--name", help="Character name")
     parser.add_argument("-v", "--version", action='store_true',
                         help="Print version")
     args = parser.parse_args()
 
-    if args.alignment and args.alignment not in dndraces.Race.ALIGNMENTS:
-        print("Illegal alignment: {}".format(args.alignment), file=sys.stderr)
-        print("Options are: {}.".format(", ".join(race.ALIGNMENTS)),
-              file=sys.stderr)
-        sys.exit(1)
+    if not args.race:
+        args.race = random.choice(dndraces.list_races())
 
     return args
 

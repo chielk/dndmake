@@ -8,8 +8,8 @@ dndmake \- Generate a character
 [\fB\-t\fR|\fB\-s\fR]
 [\fB\-b\fR|\fB\-l\fR]
 [\fB\-n\fR \fINAME\fR]
-{halfling,gnome,half-orc,elf,dwarf,human,half-elf}
-[{CE,CN,LE,LN,NE,CG,NN,LG,NG}]
+[\fB\-a\fR {CE,CN,LE,LN,NE,CG,NN,LG,NG}]
+[{halfling,gnome,half-orc,elf,dwarf,human,half-elf}]
 .SH DESCRIPTION
 .PP
 Generate a D&D character with a gender and a height and weight based on the
@@ -50,7 +50,7 @@ stability".
 {halfling,gnome,half\-orc,elf,dwarf,human,half\-elf,...}
 Race
 .TP
-{NN,LG,CE,CG,NE,CN,LN,LE,NG}
+.BR \-a ", " \-\-alignment ={NN,LG,CE,CG,NE,CN,LN,LE,NG}
 Alignment
 .TP
 .BR \-h ", " \-\-help

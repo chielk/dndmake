@@ -114,18 +114,18 @@ class Race:
         self.make_gender(gender)
 
         if height == "tall":
-            H_MOD = (roll(self.H_MOD) + 2 * E(self.H_MOD)) / 3
+            H_MOD = (roll(self.H_MOD)['total'] + 2 * E(self.H_MOD)) / 3
         elif height == "short":
-            H_MOD = roll(self.H_MOD) / 2
+            H_MOD = roll(self.H_MOD)['total'] / 2
         else:
-            H_MOD = roll(self.H_MOD)
+            H_MOD = roll(self.H_MOD)['total']
 
         if weight == "heavy":
-            W_MOD = (roll(self.W_MOD) + 2 * E(self.W_MOD)) / 3
+            W_MOD = (roll(self.W_MOD)['total'] + 2 * E(self.W_MOD)) / 3
         elif weight == "light":
-            W_MOD = roll(self.W_MOD) / 2
+            W_MOD = roll(self.W_MOD)['total'] / 2
         else:
-            W_MOD = roll(self.W_MOD)
+            W_MOD = roll(self.W_MOD)['total']
 
         H_BASE = Length.parse(self.gender.H_BASE)
         H_UNIT = Length.parse(self.H_UNIT)
