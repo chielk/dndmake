@@ -50,7 +50,7 @@ def create_config():
     elif 'www.myth-weavers.com' in url:
         try:
             mw_id = re.search(r"\#id=(\d+)", url).groups()[0]
-            config[first_name]['mw_id'] = tw_id
+            config[first_name]['mw_id'] = mw_id
         except AttributeError:
             sys.stderr.write("Can not read url. Quiting.\n")
             sys.exit(1)
@@ -88,7 +88,6 @@ def load_config(char_name=None):
         char_dict['dw_url'] = TW_URL.format(char_dict['dw_id'])
 
     return char_dict
-
 
 
 class Size(object):
@@ -349,6 +348,7 @@ def AttackBonus(attack_bonus=''):
 
 
 def getCarryingCapacity(strength, size):
+    capacity = Character.CARRYING_CAPACITY
     try:
         result = capacity[strength]
     except KeyError:
@@ -509,7 +509,7 @@ Loads,4: L: {2[0]}, M: {2[1]}, H: {2[2]}
         if key in self.FIELDS:
             try:
                 self._fields[key] = self.FIELDS[key](value)
-            except ValueError as e:
+            except ValueError:
                 if key in self._fields:
                     if key in self._temp_ability_scores:
                         del self._fields[key]
@@ -780,6 +780,17 @@ class TwCharacterSheetParser(HTMLParser):
             self._character.set_field(id_, value)
 
 
+def parse_dw(json_object):
+    """Read a Myth-Weavers.com sheet and turn it into a usable representation.
+
+    :json_object: json object from myth-weavers.com
+    :returns: a Character object
+
+    """
+    import json
+    return Character(json.decode(json_object)['sheetdata']['sheetdata'])
+
+
 def character_from_url(char_dict):
     if 'tw_id' in char_dict:
         logging.info("Downloading character sheet for analysis.")
@@ -790,3 +801,6 @@ def character_from_url(char_dict):
         parser.set_character(character)
         parser.feed(html)
         return character
+    elif 'dw_id' in char_dict:
+        req = urlopen(char_dict['tw_url'])
+        return parse_dw(req.read())
