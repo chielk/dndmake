@@ -24,7 +24,7 @@ def list_characters():
             site = 'The Tangled Web'
         elif 'dw_id' in char_dict:
             site = 'Myth Weavers'
-        print("{0:<30}-- {1}, {2}".format(key, char_dict['full_name'], site))
+        print("{:<30}-- {}, {}".format(key, char_dict['full_name'], site))
     sys.exit(0)
 
 

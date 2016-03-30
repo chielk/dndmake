@@ -1,0 +1,33 @@
+#compdef dndwildshape
+
+typeset -A opt_args
+local sizes attributes
+
+
+sizes=('F' 'D' 'T' 'S' 'M' 'L' 'H' 'G' 'C')
+
+attributes=('name' 'size' 'ac' 'init' 'str' 'dex' 'con' 'int' 'wis'
+			'cha' 'fort' 'reflex' 'will' 'melee' 'grapple' 'ranged'
+			'land' 'burrow' 'swim' 'climb' 'fly')
+
+_arguments \
+	'(--help)-h[Show this help message and exit]'\
+	'(-h)--help[show this help message and exit]'\
+	'(--version)-v[Print version and exit]'\
+	'(-v)--version[Print version and exit]'\
+	'(--hd-cap)-d[Only show results of animals with fewer HD than your level]'\
+	'(-d)--hd-cap[Only show results of animals with fewer HD than your level]'\
+	'(--list)-l[List the known characters]'\
+	'(-l)--list[List the known characters]'\
+	'(--ex)-x+[EX]:Only show results that have this extraordinary special attack::'\
+	'(-x)--ex+[EX]:Only show results that have this extraordinary special attack::'\
+	'(--animals)-a+:The tab-separated file with animal data:_files'\
+	'(-a)--animals+:The tab-separated file with animal data:_files'\
+	'(--output-file)-o+:The tab-separated file with animal data:_files'\
+	'(-a)--animals+:The tab-separated file with animal data:_files'\
+	'(--character)-c+:The tab-separated file with animal data::'\
+	'(-c)--character+:The tab-separated file with animal data::'\
+	'(--order)-o+:Sort results based on some attribute:($attributes)'\
+	'(-o)--order+:Sort results based on some attribute:($attributes)'\
+	'(--size)-s+:Only show results of this size:($sizes)'\
+	'(-s)--size+:Only show results of this size:($sizes)' && ret=0
