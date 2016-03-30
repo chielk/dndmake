@@ -19,7 +19,7 @@ setup(name='dndmake',
                                               'extras/dndwildshape']),
                   ('/usr/local/share/zsh/site-functions', ['extras/_dndmake',
                                                            'extras/_dndwildshape']),
-                  ('/usr/local/share/man/man1', ['extras/dndmake.1'
+                  ('/usr/local/share/man/man1', ['extras/dndmake.1',
                                                  'extras/dndwildshape.1']),
                   ('/etc/dndmake/races', ['dndraces/human.py',
                                           'dndraces/elf.py',
