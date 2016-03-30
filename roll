@@ -8,39 +8,40 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Roll some dice')
     parser.add_argument('expression', type=str, nargs='+',
-                        help='Expression (e.g. 3d6+3)')
-    parser.add_argument("-v", "--verbosity", action="count",
-                        help="Print individual dice and constants")
-    parser.add_argument("-e", "--expectancy", action="store_true",
-                        help="Print expectancy instead of roll")
-    parser.add_argument("--min", action="store_true",
-                        help="Print minimum outcome")
-    parser.add_argument("--max", action="store_true",
-                        help="Print maximum outcome")
+                        help='expression (e.g. 3d6+3)')
+    parser.add_argument("-v", "--verbose", action="count", dest="verbosity",
+                        help="print individual dice and constants")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("-e", "--expectancy", dest="mode", const="E",
+                        action="store_const",
+                        help="print expectancy instead of roll")
+    mode.add_argument("--min", dest="mode", const="min", action="store_const",
+                        help="print minimum outcome")
+    mode.add_argument("--max", dest="mode", const="max", action="store_const",
+                        help="print maximum outcome")
     args = parser.parse_args()
     if not args.verbosity:
         args.verbosity = 0
 
     dice_expression = DiceExpression("".join(args.expression))
-    total = roll(dice_expression)
     exp = E(dice_expression)
-    min = min_val(dice_expression)
-    max = max_val(dice_expression)
-    s = str(dice_expression)
+    vmin = min_val(dice_expression)
+    vmax = max_val(dice_expression)
 
     # Output
     if args.verbosity < 1:
-        if args.expectancy:
+        if args.mode == "E":
             print(exp, end="")
-        elif args.min:
-            print(min, end="")
-        elif args.max:
-            print(max, end="")
+        elif args.mode == "min":
+            print(vmin, end="")
+        elif args.mode == "max":
+            print(vmax, end="")
         else:
-            print(total, end=" ")
+            print(roll(dice_expression)['total'], end=" ")
     else:
-        print(total, end=" ")
+        result = roll(dice_expression)
+        print('{} -> {}'.format(result['rolls'], result['total']), end=" ")
         if args.verbosity and args.verbosity > 0:  # Print expectancy
-            print("\t(exp: {}, min: {}, max: {}".format(exp, min, max),
+            print("\t(exp: {}, min: {}, max: {}".format(exp, vmin, vmax),
                   end=")")
     print()

@@ -12,7 +12,19 @@ def roll(dice_expr):
     """
     if type(dice_expr) == str:
         dice_expr = DiceExpression(dice_expr)
-    return sum(dice_expr.__roll__())
+
+    values = []
+    for value in dice_expr.__roll__():
+        if value['die'] == 'c':
+            const = value['rolls']
+            values.append("[{}]".format(const))
+        else:
+            die = value['die']
+            for roll in value['rolls']:
+                values.append("[{}]/{}".format(roll, die))
+
+    return {'total': sum(value['total'] for value in dice_expr.__roll__()),
+            'rolls': ' '.join(values)}
 
 
 def E(dice_expr):
@@ -63,7 +75,7 @@ class Element:
         return str(self._number)
 
     def __roll__(self):
-        return self._number
+        return {'total': self._number, 'rolls': self._number, 'die': 'c'}
 
     def __expectancy__(self):
         return self._number
@@ -97,8 +109,9 @@ class Dice(Element):
         return s + "{}d{}".format(self._number, self._sides)
 
     def __roll__(self):
-        return (self._sign *
-                sum((self.__roll_die() for _ in range(self._number))))
+        rolls = [self.__roll_die() for _ in range(self._number)]
+        return {'total': self._sign * sum(rolls),
+                'rolls': rolls, 'die': self._sides}
 
     def __expectancy__(self):
         expectancy = self._number * (self._sides + 1) / 2
