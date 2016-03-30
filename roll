@@ -14,7 +14,8 @@ if __name__ == "__main__":
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("-e", "--expectancy", dest="mode", const="E",
                         action="store_const",
-                        help="print expectancy instead of roll")
+                        help="print individual dice and constants and show " +
+                             "the expectancy, min and max")
     mode.add_argument("--min", dest="mode", const="min", action="store_const",
                         help="print minimum outcome")
     mode.add_argument("--max", dest="mode", const="max", action="store_const",

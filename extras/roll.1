@@ -1,0 +1,32 @@
+.TH "ROLL" "1" "March 2016" "roll 0.1" "User Commands"
+.SH NAME
+roll \- Roll some dice
+.SH SYNOPSIS
+.B dndmake
+[\fB\-h\fR]
+[\fB\-v\fR]
+[\fB\-e\fR|\fB\-\-min\fR|\fB\-\-max\fR]
+expression [expression ...]
+.SH DESCRIPTION
+.PP
+Roll dice, add constants and show the result
+
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+show this help message and exit
+.TP
+.BR \-v ", " \-\-verbose
+print individual dice and constants
+.TP
+.BR \-e ", " \-\-expectancy
+print expectancy instead of roll
+.TP
+.BR \-\-min
+print minimum outcome
+.TP
+.BR \-\-max
+print maximum outcome
+.TP
+.BR expression
+dice and constants (e.g. 3d6+3)
