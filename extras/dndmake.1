@@ -1,78 +1,38 @@
 .TH "DNDMAKE" "1" "March 2016" "dndmake 0.1" "User Commands"
 .SH NAME
-dndmake \- Generate a character
+dndmake \- Helper tool for D&D sessions
 .SH SYNOPSIS
-.B dndmake
+.B dndmake npc
 [\fB\-h\fR]
-[\fB\-m\fR|\fB\-f\fR]
-[\fB\-t\fR|\fB\-s\fR]
-[\fB\-b\fR|\fB\-l\fR]
-[\fB\-n\fR \fINAME\fR]
-[\fB\-a\fR {CE,CN,LE,LN,NE,CG,NN,LG,NG}]
-[{halfling,gnome,half-orc,elf,dwarf,human,half-elf}]
+[\fB\-v\fR]
+{init,npc,wildshape (wi)}
 .SH DESCRIPTION
 .PP
+Dndmake is a tool for managing D&D 3.5 campaigns.
+
+It can generate NPCs, wildshapes, or help organise a campaign.
+
+.SH OPTIONS
+.BR \-h ", " \-\-help
+show this help message and exit
+.TP
+.BR \-v ", " \-\-version
+print version and exit
+.PP
+
+.SH DNDMAKE COMMANDS
+{init,npc,wildshape}
+.TP
+.BR dndmake-init "(1)"
+Create a D&D campaign in the current directory.
+.TP
+.BR dndmake-npc "(1)"
 Generate a D&D character with a gender and a height and weight based on the
 gender. Furthermore they have a hair and eye colour and a personality based on
 the five-factor model (FFM), which influences their alignment. Gender, height,
 weight and alignment can also be influenced or forced through arguments.
-
-.SS The Five-factor Model
-Openness to experience: (inventive/curious vs. consistent/cautious).
-Appreciation for art, emotion, adventure, unusual ideas, curiosity, and variety
-of experience. Openness reflects the degree of intellectual curiosity,
-creativity and a preference for novelty and variety a person has. It is also
-described as the extent to which a person is imaginative or independent, and
-depicts a personal preference for a variety of activities over a strict
-routine. Some disagreement remains about how to interpret the openness factor,
-which is sometimes called "intellect" rather than openness to experience.
-
-Conscientiousness: (efficient/organized vs. easy-going/careless). A tendency to
-be organized and dependable, show self-discipline, act dutifully, aim for
-achievement, and prefer planned rather than spontaneous behavior.
-
-Extraversion: (outgoing/energetic vs. solitary/reserved). Energy, positive
-emotions, surgency, assertiveness, sociability and the tendency to seek
-stimulation in the company of others, and talkativeness.
-
-Agreeableness: (friendly/compassionate vs. analytical/detached). A tendency to
-be compassionate and cooperative rather than suspicious and antagonistic
-towards others. It is also a measure of one's trusting and helpful nature, and
-whether a person is generally well tempered or not.
-
-Neuroticism: (sensitive/nervous vs. secure/confident). The tendency to
-experience unpleasant emotions easily, such as anger, anxiety, depression, and
-vulnerability. Neuroticism also refers to the degree of emotional stability and
-impulse control and is sometimes referred to by its low pole, "emotional
-stability".
-.SH OPTIONS
 .TP
-{halfling,gnome,half\-orc,elf,dwarf,human,half\-elf,...}
-Race
+.BR dndmake-wildshape "(1)"
+Scrape an online character sheet and apply all animal templates for wildshape
+stats.
 .TP
-.BR \-a ", " \-\-alignment ={NN,LG,CE,CG,NE,CN,LN,LE,NG}
-Alignment
-.TP
-.BR \-h ", " \-\-help
-show this help message and exit
-.TP
-.BR \-m ", " \-\-male
-Make a male character
-.TP
-.BR \-f ", " \-\-female
-Make a female character
-.TP
-.BR \-t ", " \-\-tall
-Make a tall character
-.TP
-.BR \-s ", " \-\-short
-Make a short character
-.TP
-.BR \-b ", " \-\-heavy
-Make a heavy character
-.TP
-.BR \-l ", " \-\-light
-Make a light character
-.TP
-.BR \-n ", " \-\-name =\fINAME\fR
-Character name

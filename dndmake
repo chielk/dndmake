@@ -11,63 +11,146 @@ import sys
 import os
 import random
 import dndraces
-try:
-    import pyperclip
-except ImportError:
-    pyperclip = None
+import pyperclip
+import csv
+import logging
+from dndhelper.character import (Character, Speed, Size, character_from_url,
+                                 create_config, load_config, list_characters)
+
+
+def parse_animals(animaldb_file):
+    animals = []
+    logging.info("Parsing animal database.")
+    with open(animaldb_file, 'r') as animal_file:
+        dialect = csv.Dialect
+        animal_db = csv.reader(animal_file, dialect=csv.excel_tab)
+        header = next(animal_db)
+
+        for counter, animal in enumerate(animal_db):
+            a = Character(dict(zip(header, animal)))
+            animals.append(a)
+            logging.debug("Creating animal  %d - '%s'." % (counter, a.name))
+    return animals
+
+
+def write_to_file(filename, wildshapes):
+    with open(filename, 'w') as f:
+        for wildshape in wildshapes:
+            f.write(str(wildshape))
+            f.write('\n')
+            f.write(79 * '=')
+            f.write('\n')
+
+
+_KEY_ORDER = ['name', 'size', 'ac', 'init', 'str', 'dex', 'con', 'int', 'wis',
+              'cha', 'fort', 'reflex', 'will', 'melee', 'grapple', 'ranged'] +\
+              [modus for modus in Speed.MODUS if modus]  # Remove empty string
+
+
+
+
+def wildshape_sort_key(key):
+    if key in [modus for modus in Speed.MODUS if modus]:  # Remove empty str
+        return lambda x: getattr(x.speed, key)
+    elif key in ['melee', 'grapple', 'ranged']:
+        return lambda x: getattr(x, key)[0]
+    else:
+        return lambda x: getattr(x, key)
 
 
 def parse_arguments():
     """Parse command-line arguments."""
 
-    descr = """Generate a D&D character with a gender and a height and weight
-    based on the gender. Furthermore they have a hair and eye colour and a
-    personality based on the five-factor model (FFM), which influences their
+    descr = """Helper tool for D&D sessions"""
+    help_npc = """Generate a D&D character with a gender and a height and
+    weight based on the gender. Furthermore they have a hair and eye colour and
+    a personality based on the five-factor model (FFM), which influences their
     alignment. Gender, height, weight and alignment can also be influenced or
     forced through arguments."""
+    help_wildshape = """Scrape an online character sheet and apply all animal
+    templates for wildshape stats."""
+    help_init = 'Create a D&D campaign in the current directory.'
 
-    parser = argparse.ArgumentParser(description=descr)
+    parser = argparse.ArgumentParser(description=descr, conflict_handler='resolve')
 
-    gender = parser.add_mutually_exclusive_group()
+    parser.add_argument("-v", "--version", action='store_true',
+                         help="print version and exit")
+
+    subparsers = parser.add_subparsers(title='subcommands', dest='subcommand')
+
+    # INIT
+    init = subparsers.add_parser('init', help=help_init)
+
+    # NPC
+    npc = subparsers.add_parser('npc', help=help_npc)
+
+    gender = npc.add_mutually_exclusive_group()
     gender.add_argument("-m", "--male", action="store_const", const="male",
                         dest="gender", help="Make a male character")
     gender.add_argument("-f", "--female", action="store_const", const="female",
                         dest="gender", help="Make a female character")
 
-    height = parser.add_mutually_exclusive_group()
+    height = npc.add_mutually_exclusive_group()
     height.add_argument("-t", "--tall", action="store_const", const="tall",
                         dest="height", help="Make a tall character")
     height.add_argument("-s", "--short", action="store_const", const="short",
                         dest="height", help="Make a short character")
 
-    weight = parser.add_mutually_exclusive_group()
+    weight = npc.add_mutually_exclusive_group()
     weight.add_argument("-b", "--heavy", action="store_const", const="heavy",
                         dest="weight", help="Make a heavy character")
     weight.add_argument("-l", "--light", action="store_const", const="light",
                         dest="weight", help="Make a light character")
 
-    parser.add_argument("race", default=None, choices=dndraces.list_races(),
-                        nargs='?', help="e.g. human, elf")
+    npc.add_argument("race", default=None, choices=dndraces.list_races(),
+                     nargs='?', help="e.g. human, elf")
 
-    parser.add_argument("-a", "--alignment", choices=dndraces.Race.ALIGNMENTS,
-                        default=None,
-                        help="Lawfulness and goodness: [LNC][GNE]")
-    parser.add_argument("-n", "--name", help="Character name")
-    parser.add_argument("-v", "--version", action='store_true',
-                        help="Print version")
-    args = parser.parse_args()
+    npc.add_argument("-a", "--alignment", choices=dndraces.Race.ALIGNMENTS,
+                     default=None, help="Lawfulness and goodness: [LNC][GNE]")
+    npc.add_argument("-n", "--name", help="Character name")
 
-    if not args.race:
-        args.race = random.choice(dndraces.list_races())
+    # WILDSHAPE
+    wildshape = subparsers.add_parser('wildshape', aliases=['wi'],
+                                      help=help_wildshape)
+
+    wildshape.add_argument('-o', '--order', default='name',
+                           choices=_KEY_ORDER,
+                           help="sort results based on some property of the "
+                           "final form.")
+    wildshape.add_argument('-d', '--hd-cap', action='store_true',
+                           help="only show results of animals with fewer HD "
+                           "than your level.")
+    wildshape.add_argument('-x', '--ex', help="only show results that have "
+                           "this extraordinary special attack.")
+    wildshape.add_argument('-s', '--size', action='append',
+                           choices=[s[0][0] for s in Size.SIZE_MODS],
+                           help="only show results of this size.")
+    wildshape.add_argument('-a', '--animals', default="animaldb.csv",
+                           help="the tab-separated file with animal data.")
+    wildshape.add_argument('url', nargs='?',
+                           default='http://www.thetangledweb.net/forums/'
+                                   'profiler/view_char.php?cid=75945',
+                           help="the URL of the sheet to scrape.")
+    wildshape.add_argument('-f', '--output-file',
+                           help="write output to file, for easy future "
+                                "lookup.")
+    wildshape.add_argument('-c', '--character', default=None,
+                           help="character to use.")
+    wildshape.add_argument('-l', '--list', default=None, action='store_true',
+                           help="list the known characters.")
+
+    if sys.argv[1] in ('-v', '--version'):
+        args = argparse.Namespace(version=True)
+    else:
+        args = parser.parse_args()
 
     return args
 
 
-if __name__ == "__main__":
-    args = parse_arguments()
-    if args.version:
-        print('dndmake {}'.format(DNDMAKE_VERSION))
-        sys.exit(0)
+def npc(args):
+    if not args.race:
+        args.race = random.choice(dndraces.list_races())
+
     try:
         Race = dndraces.load_race(args.race)
     except FileNotFoundError:
@@ -76,7 +159,59 @@ if __name__ == "__main__":
 
     character = Race(name=args.name, gender=args.gender, height=args.height,
                      weight=args.weight, alignment=args.alignment)
-    if pyperclip:
-        pyperclip.copy(character.__str__())
+
+    pyperclip.copy(character.__str__())
 
     print(character)
+
+
+def wildshape(args):
+    if args.list:
+        list_characters()
+    if not args.url:
+        char_dict = load_config(args.character)
+    else:
+        char_dict = {'tw_url': args.url}
+    character = character_from_url(char_dict)
+    animals = parse_animals(args.animals)
+    wildshapes = []
+    exs = set()
+    for animal in animals:
+        try:
+            wildshaped_character = character.wildshape(animal, args.hd_cap)
+            wildshapes.append(wildshaped_character)
+            for ex in wildshaped_character.exAttacks:
+                exs.add(ex.lower())
+        except ValueError:
+            pass
+    if args.size is not None:
+        wildshapes = [w for w in wildshapes if w.size.size[0] in args.size]
+    if args.ex is not None:
+        wildshapes = [w for w in wildshapes if args.ex in w.ex]
+    wildshapes.sort(key=wildshape_sort_key(args.order))
+    if args.output_file is not None:
+        write_to_file(args.output_file, wildshapes)
+    else:
+        for wildshape in wildshapes:
+            print(wildshape)
+
+
+def init(args):
+    raise NotImplementedError('init subcommand not yet implemented')
+
+
+def main():
+    args = parse_arguments()
+    if args.version:
+        print('dndmake version {}'.format(DNDMAKE_VERSION))
+        sys.exit(0)
+
+    if args.subcommand in {'wildshape', 'wi'}:
+        wildshape(args)
+    elif args.subcommand == 'npc':
+        npc(args)
+    elif args.subcommand == 'init':
+        init(args)
+
+if __name__ == "__main__":
+    main()

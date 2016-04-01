@@ -1,12 +1,62 @@
 _dndmake()
 {
-    local cur prev opts
-    COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="-h --help -e --expectancy --min --max"
+  local cur prev
 
-	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-	return 0
+  cur=${COMP_WORDS[COMP_CWORD]}
+  prev=${COMP_WORDS[COMP_CWORD-1]}
+
+  case ${COMP_CWORD} in
+    1)
+      local opts
+      opts="-v --version -h --help"
+      COMPREPLY=($(compgen -W "init wildshape wi npc $opts" ${cur}))
+      ;;
+    *)
+      case ${COMP_WORDS[1]} in
+        npc)
+          opts="-h --help -m --male -f --female -t --tall -s --short -b --heavy -l --light --alignment"
+          races="`{ ls /etc/dndmake/races ; ls ~/.dndmake/races ; } | sed s/_/-/g | sed s/.py//g`"
+          alignments="LG NG CG LN NN CN LE NE CE"
+          case $prev in
+            -a)
+              ;&
+            --alignment)
+              opts="$alignments"
+              ;;
+            *)
+              opts="$opts $races"
+              ;;
+          esac
+          COMPREPLY=( $(compgen -W "${opts}" \"${cur}\" ) )
+          ;;
+        wi)
+          ;&
+        wildshape)
+          opts="-h --help -v --version -d --hd-cap -l --list -x --ex -a --animals -f --output-file -c --character -o --order -s --size"
+          sizes="F D T S M L H G C"
+          attributes="name size ac init str dex con int wis cha fort reflex will melee grapple ranged land burrow swim climb fly land burrow swim climb fly"
+
+          case $prev in
+            -s)
+              ;&
+            --size)
+              opts="$sizes"
+              ;;
+            -o)
+              ;&
+            --order)
+              opts="$attributes"
+              ;;
+          esac
+
+          COMPREPLY=( $(compgen -W "${opts}" \"${cur}\" ) )
+          ;;
+        init)
+          ;;
+      esac
+      ;;
+  esac
 }
+
 complete -F _dndmake dndmake
+# vim: ft=sh sw=2 ts=2 et
