@@ -4,7 +4,7 @@
 # http://en.wikipedia.org/wiki/Big_Five_personality_traits
 # (c) Chiel Kooijman 2014
 
-DNDMAKE_VERSION = "0.1"
+DNDMAKE_VERSION = "0.2"
 
 import argparse
 import sys
@@ -139,6 +139,9 @@ def parse_arguments():
     wildshape.add_argument('-l', '--list', default=None, action='store_true',
                            help="list the known characters.")
 
+    if len(sys.argv) < 2:
+        print(parser.print_help())
+        sys.exit(1)
     if sys.argv[1] in ('-v', '--version'):
         args = argparse.Namespace(version=True)
     else:

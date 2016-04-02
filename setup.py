@@ -7,7 +7,7 @@ if sys.version_info.major < 3:
     sys.exit(1)
 
 setup(name='dndmake',
-      version='0.1',
+      version='0.2',
       author="Chiel Kooijman, Patrick de Kok",
       author_email="chiel999@gmail.com",
       description="General purpose D&D 3.5 toolkit.",
