@@ -3,7 +3,8 @@
 dndmake wildshape \- Scrapes an online character sheet and applies all animal
 templates for wildshape stats.
 .SH SYNOPSIS
-.B dndmake [wildshape|wi]
+.B dndmake
+[wildshape|wi]
 [\fB\-h\fR]
 [\fB\-l\fR]
 [\fB\-v\fR]
@@ -12,8 +13,8 @@ templates for wildshape stats.
 [\fB\-a\fR \fIANIMALS\fR]
 [\fB\-c\fR \fICHARACTER\fR]
 [\fB\-f\fR \fIOUTPUT_FILE\fR]
-[\fB\-s\fR \fI{F,D,T,S,M,L,H,G,C}\fR]
-[\fB\-o\fR \fI{name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,swim,climb,fly}\fR]
+[\fB\-s\fR {F,D,T,S,M,L,H,G,C}]
+[\fB\-o\fR {name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,swim,climb,fly}]
 [URL]
 .SH DESCRIPTION
 .PP
@@ -21,32 +22,31 @@ Scrapes an online character sheet and applies all animal templates for wildshape
 .SH OPTIONS
 .TP
 [URL]
-The URL of the sheet to scrape.
+the URL of the sheet to scrape
 .TP
 .BR \-h ", " \-\-help
 show this help message and exit
 .TP
-.BR \-o ", " \-\-order =\fI{name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,swim,climb,fly}\fR
-Character name
-Sort results based on some property of the final form.
+.BR \-o ", " \-\-order ={name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,swim,climb,fly}
+sort results based on some property of the final form
 .TP
 .BR \-d ", " \-\-hd\-cap
-Only show results of animals with fewer HD than your level.
+only show results of animals with fewer HD than your level
 .TP
 .BR \-x ", " \-\-ex =\fIEX\fR
-Only show results that have this extraordinary special attack.
+only show results that have this extraordinary special attack
 .TP
-.BR \-s ", " \-\-size =\fI{F,D,T,S,M,L,H,G,C}\fR
-Only show results of this size.
+.BR \-s ", " \-\-size ={F,D,T,S,M,L,H,G,C}
+only show results of this size
 .TP
 .BR \-a ", " \-\-animals =\fIANIMALS\fR
-The tab-separated file with animal data.
+the tab-separated file with animal data
 .TP
 .BR \-f ", " \-\-output-file =\fIOUTPUT_FILE\fR
-Write output to file, for easy future lookup.
+write output to file, for easy future lookup
 .TP
 .BR \-c ", " \-\-character =\fICHARACTER\fR
-Character to use.
+character to use
 .TP
 .BR \-l ", " \-\-list
-List the known characters.
+list the known characters.
