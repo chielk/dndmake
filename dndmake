@@ -154,11 +154,7 @@ def npc(args):
     if not args.race:
         args.race = random.choice(dndraces.list_races())
 
-    try:
-        Race = dndraces.load_race(args.race)
-    except FileNotFoundError:
-        print("Unknown race:", args.race, file=sys.stderr)
-        sys.exit(1)
+    Race = dndraces.load_race(args.race)
 
     character = Race(name=args.name, gender=args.gender, height=args.height,
                      weight=args.weight, alignment=args.alignment)
