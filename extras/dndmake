@@ -37,14 +37,10 @@ _dndmake()
           attributes="name size ac init str dex con int wis cha fort reflex will melee grapple ranged land burrow swim climb fly land burrow swim climb fly"
 
           case $prev in
-            -s)
-              ;&
-            --size)
+            -s | --size)
               opts="$sizes"
               ;;
-            -o)
-              ;&
-            --order)
+            -o | --order)
               opts="$attributes"
               ;;
           esac
