@@ -1,8 +1,7 @@
 dndmake
 =======
 Provides:
-- dndmake - Generate a D&D NPC.
-- dndwildshape - Generate a wildshaped D&D character.
+- dndmake - helper tool for D&D sessions
 - roll - roll dice and add constants as appropriate
 
 Summary
@@ -12,15 +11,14 @@ Furthermore they have a hair and eye colour and a personality based on the
 five-factor model (FFM), which influences their alignment. Gender, height,
 weight and alignment can also be influenced or forced through arguments.
 
-Usage (dndmake)
+Usage (dndmake-npc)
 ---------------
 ```
-dndmake [-h] [-m] [-f] [-t] [-s] [-b] [-l] [-n NAME] race [alignment]
+dndmake npc [-h] [-m] [-f] [-t] [-s] [-b] [-l] [-a {LNC}{GNE}] [-n NAME] [race]
 ```
 Positional arguments:
 ```
   race					e.g. human, elf
-  alignment             Lawfulness and goodness: [LNC][GNE]
 ```
 
 Optional arguments:
@@ -32,17 +30,18 @@ Optional arguments:
   -s, --short           Make a short character
   -b, --heavy           Make a heavy character
   -l, --light           Make a light character
+  -a --alignment        Lawfulness and goodness: [LNC][GNE]
   -n NAME, --name NAME  Character name
 ```
 
-Usage (dndwildshape)
+Usage (dndmake-wildshape)
 --------------------
 ```
-dndwildshape [-h]
-             [-o {name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,climb,fly,swim}]
-             [-d] [-x EX] [-s {F,D,T,S,M,L,H,G,C}] [-a ANIMALS]
-             [-f OUTPUT_FILE]
-             [url]
+dndmake wildshape [-h]
+				  [-o {name,size,ac,init,str,dex,con,int,wis,cha,fort,reflex,will,melee,grapple,ranged,land,burrow,climb,fly,swim}]
+				  [-d] [-x EX] [-s {F,D,T,S,M,L,H,G,C}] [-a ANIMALS]
+				  [-f OUTPUT_FILE]
+				  [url]
 ```
 
 Scrapes an online character sheet and applies all animal templates for
