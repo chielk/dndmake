@@ -16,8 +16,9 @@ def ensure_directories():
 
 def list_races():
     ensure_directories()
-    classes = os.listdir(HOME_RACES)
-    classes += os.listdir(ETC_RACES)
+    classes = os.listdir(ETC_RACES)
+    if os.path.isdir(HOME_RACES):
+        classes += os.listdir(HOME_RACES)
     return [cls.split('.')[0].replace('_', '-') for cls in classes]
 
 
