@@ -14,16 +14,19 @@ def roll(dice_expr):
         dice_expr = DiceExpression(dice_expr)
 
     values = []
+    total = 0
     for value in dice_expr.__roll__():
         if value['die'] == 'c':
+            total += value['rolls']
             const = value['rolls']
             values.append("[{}]".format(const))
         else:
+            total += sum(value['rolls'])
             die = value['die']
             for roll in value['rolls']:
                 values.append("[{}]/{}".format(roll, die))
 
-    return {'total': sum(value['total'] for value in dice_expr.__roll__()),
+    return {'total': total,
             'rolls': ' '.join(values)}
 
 
