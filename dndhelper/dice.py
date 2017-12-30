@@ -4,6 +4,21 @@ import random
 import re
 
 
+def minify(die):
+    minis = {"0": "₀",
+             "1": "₁",
+             "2": "₂",
+             "3": "₃",
+             "4": "₄",
+             "5": "₅",
+             "6": "₆",
+             "7": "₇",
+             "8": "₈",
+             "9": "₉"}
+
+    return "".join((minis[digit] for digit in str(die)))
+
+
 def roll(dice_expr):
     """
     Operator to evaluate DiceExpressions to its random value.
@@ -19,13 +34,12 @@ def roll(dice_expr):
         if value['die'] == 'c':
             total += value['rolls']
             const = value['rolls']
-            values.append("[{}]".format(const))
+            values.append("〈{}〉".format(const))
         else:
             total += sum(value['rolls'])
             die = value['die']
             for roll in value['rolls']:
-                values.append("[{}]/{}".format(roll, die))
-
+                values.append("〈{}/{}〉".format(roll, minify(die)))
     return {'total': total,
             'rolls': ' '.join(values)}
 

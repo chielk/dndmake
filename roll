@@ -41,8 +41,7 @@ if __name__ == "__main__":
             print(roll(dice_expression)['total'], end=" ")
     else:
         result = roll(dice_expression)
-        print('{} -> {}'.format(result['rolls'], result['total']), end=" ")
+        print('{} ⇒ {}'.format(result['rolls'], result['total']), end=" ")
         if args.verbosity and args.verbosity > 0:  # Print expectancy
-            print("\t(exp: {}, min: {}, max: {}".format(exp, vmin, vmax),
-                  end=")")
+            print("\tE {}  ↓{} ↑{}".format(exp, vmin, vmax))
     print()
