@@ -5,10 +5,8 @@ typeset -A opt_args
 _arguments \
     '(--help)-h[Show this help message and exit]'\
     '(-h)--help[show this help message and exit]'\
-    '(--min --max --expectancy)-e[print individual'\
-    'dice and constants and show the expectancy, min and max]'\
-    '(--min --max -e)--expectancy[print individual'\
-    'dice and constants and show the expectancy, min and max]'\
+    '(--min --max --expectancy)-e[print individual dice and constants and show the expectancy, min and max]'\
+    '(--min --max -e)--expectancy[print individual dice and constants and show the expectancy, min and max]'\
     '(-e --expectancy --max)--min[print only the minimum possible output]'\
     '(-e --expectancy --min)--max[print only the maximum possible output]'\
     '(--version)-v[print version and exit]'\
